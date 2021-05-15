@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 	glutInitDisplayMode(GLUT_SINGLE);
 	glutInitWindowSize(400, 300);
 	glutInitWindowPosition(100, 100);
-	glutCreateWindow("Hello world!");
+	glutCreateWindow("Nguyen Tri Nhan - 1810390");
 	glutDisplayFunc(displayMe);
 	glutMainLoop();
 	return 0;
