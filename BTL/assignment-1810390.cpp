@@ -355,18 +355,18 @@ public:
 		float fAngle = 2 * PI / nSegment;
 		float x, y, z;
 
-		pt[0].set(0, fHeight / 2, 0);
+		pt[0].set(0, fHeight, 0);
 		for (i = 0; i < nSegment; i++)
 		{
 			x = fRadius * cos(fAngle * i);
 			z = fRadius * sin(fAngle * i);
-			y = fHeight / 2;
+			y = fHeight;
 			pt[i + 1].set(x, y, z);
 
-			y = -fHeight / 2;
+			y = -fHeight;
 			pt[i + 1 + nSegment].set(x, y, z);
 		}
-		pt[numVerts - 1].set(0, -fHeight / 2, 0);
+		pt[numVerts - 1].set(0, -fHeight, 0);
 
 		numFaces = nSegment * 3;
 		face = new Face[numFaces];
@@ -506,47 +506,47 @@ public:
 		// Vong tron trong ben trai: [0, M - 1]
 		for (int j = 0; j < M; j++)
 		{
-			pt[i].set(innerRadius * cos((double)j * angle), fHeight + innerRadius * sin((double)j * angle), fWidth / 2);
+			pt[i].set(innerRadius * cos((double)j * angle), fHeight + innerRadius * sin((double)j * angle), fWidth);
 			i++;
 		}
 		// Vong tron trong ben phai: [M, 2M - 1]
 		for (int j = 0; j < M; j++)
 		{
-			pt[i].set(innerRadius * cos((double)j * angle), fHeight + innerRadius * sin((double)j * angle), -fWidth / 2);
+			pt[i].set(innerRadius * cos((double)j * angle), fHeight + innerRadius * sin((double)j * angle), -fWidth);
 			i++;
 		}
 		// Nua vong tron ngoai ben trai: [2M, 2M + nUpperSegment - 1]
 		for (int j = 0; j < nUpperSegment; j++)
 		{
-			pt[i].set(outerRadius * cos((double)j * angle), fHeight + outerRadius * sin((double)j * angle), fWidth / 2);
+			pt[i].set(outerRadius * cos((double)j * angle), fHeight + outerRadius * sin((double)j * angle), fWidth);
 			i++;
 		}
 		// Nua vong tron ngoai ben phai: [2M + nUpperSegment, 2M + 2N - 1]
 		for (int j = 0; j < nUpperSegment; j++)
 		{
-			pt[i].set(outerRadius * cos((double)j * angle), fHeight + outerRadius * sin((double)j * angle), -fWidth / 2);
+			pt[i].set(outerRadius * cos((double)j * angle), fHeight + outerRadius * sin((double)j * angle), -fWidth);
 			i++;
 		}
 		// Canh trai: [2M + 2N, 2M + 3N - 1]
 		for (int j = 0; j < nUpperSegment; j++)
 		{
-			pt[i].set(innerRadius * cos((double)j * angle), 0, fWidth / 2);
+			pt[i].set(innerRadius * cos((double)j * angle), 0, fWidth);
 			i++;
 		}
 		// Canh phai: [2M + 3N, 2M + 4N - 1]
 		for (int j = 0; j < nUpperSegment; j++)
 		{
-			pt[i].set(innerRadius * cos((double)j * angle), 0, -fWidth / 2);
+			pt[i].set(innerRadius * cos((double)j * angle), 0, -fWidth);
 			i++;
 		}
 		// 4 goc: [2M + 4N, 2M + 4N + 3]
-		pt[i].set(outerRadius, 0, fWidth / 2);
+		pt[i].set(outerRadius, 0, fWidth);
 		i++;
-		pt[i].set(outerRadius, 0, -fWidth / 2);
+		pt[i].set(outerRadius, 0, -fWidth);
 		i++;
-		pt[i].set(-outerRadius, 0, -fWidth / 2);
+		pt[i].set(-outerRadius, 0, -fWidth);
 		i++;
-		pt[i].set(-outerRadius, 0, fWidth / 2);
+		pt[i].set(-outerRadius, 0, fWidth);
 		i++;
 
 		/******************************************************************************************************************/
@@ -806,7 +806,7 @@ public:
 
 		for (int j = 0; j < nSegment; j++)
 		{
-			pt[i++].set(-fLength / 2 - fRadius * sin(j * anpha), fHeight, fRadius * cos(j * anpha));
+			pt[i++].set(-fLength / 2 - fRadius * sin(j * anpha), fHeight * 2, fRadius * cos(j * anpha));
 		}
 		for (int j = 0; j < nSegment; j++)
 		{
@@ -816,7 +816,7 @@ public:
 
 		for (int j = 0; j < nSegment; j++)
 		{
-			pt[i++].set(fLength / 2 + fRadius * sin(j * anpha), fHeight, fRadius * cos(j * anpha));
+			pt[i++].set(fLength / 2 + fRadius * sin(j * anpha), fHeight * 2, fRadius * cos(j * anpha));
 		}
 		for (int j = 0; j < nSegment; j++)
 		{
@@ -1021,23 +1021,20 @@ Mesh bearingLeft;
 Mesh bearingLeftBox;
 Mesh bearingRight;
 Mesh bearingRightBox;
-// float bearingBoxHeight = baseHeadWidth * 0.55;
-// float bearingBoxLength = bearingBoxHeight * 1.6;
-// float bearingBoxWidth = baseHeadHeight * 0.55;
-float bearingBoxLength = 1;
-float bearingBoxHeight = 0.1;
-float bearingBoxWidth = 0.2;
+float bearingBoxLength = baseHeadHeight * 0.55;
+float bearingBoxHeight = baseHeadWidth * 0.6;
+float bearingBoxWidth = bearingBoxLength * 0.26;
 
-int bearingNUpperSegment = 24;
+int bearingNUpperSegment = 32;
 float bearingWidth = bearingBoxWidth;
-float bearingHeight = bearingBoxHeight * 5.6;
-float bearingOuterRadius = bearingHeight * 0.75 / 2;
+float bearingOuterRadius = bearingBoxLength * 0.75;
 float bearingInnerRadius = bearingOuterRadius * 0.6;
+float bearingHeight = baseHeadHeight * 1.2 - bearingBoxHeight * 2 - bearingOuterRadius;
 
 // Chốt 3, 2, 1
 Mesh cottar3;
 float cottar3nSegment = 32;
-float cottar3Height = baseFootWidth - baseBodyWidth;
+float cottar3Height = baseBodyWidth * 3.75;
 float cottar3Radius = baseBodyWidth;
 
 Mesh cottar2;
@@ -1051,7 +1048,7 @@ float rotationDiskRadius = baseBodyLength * 1.5;
 Mesh tayQuay;
 float tayQuaynSegment = 20;
 float tayQuayLength = rotationDiskRadius * 0.88;
-float tayQuayHeight = rotationDiskHeight;
+float tayQuayHeight = rotationDiskHeight * 0.75;
 float tayQuayRadius = rotationDiskHeight * 0.8;
 
 Mesh thanhLienKet;
@@ -1079,7 +1076,8 @@ void drawBaseBody()
 void drawBaseHead()
 {
 	glPushMatrix();
-	glTranslated(0, 2 * baseFootHeight + 2 * baseBodyHeight + baseHeadHeight, 0);
+	float positionY = 2 * baseFootHeight + 2 * baseBodyHeight + baseHeadHeight;
+	glTranslated(0, positionY, 0);
 	baseHead.SetMaterialColor(COLOR_BLUE);
 	baseHead.DrawColor();
 	glPopMatrix();
@@ -1087,16 +1085,17 @@ void drawBaseHead()
 
 void drawBearingLeft()
 {
-	// glPushMatrix();
-	// glTranslated(0, 0, 0);
-	// bearingLeftBox.DrawWireframe();
-	// bearingLeftBox.SetMaterialColor(COLOR_BLUE);
-	// bearingLeftBox.DrawColor();
-	// glPopMatrix();
-
 	glPushMatrix();
+	float positionX = 0;
+	float positionY = 2 * baseFootHeight + 2 * baseBodyHeight + baseHeadHeight;
+	float positionZ = baseHeadWidth + bearingBoxHeight;
+	glTranslated(positionX, positionY, positionZ);
+	bearingLeftBox.SetMaterialColor(COLOR_RED);
+	glRotated(90, 1, 0, 0);
+	glRotated(90, 0, 1, 0);
+	bearingLeftBox.DrawColor();
+
 	glTranslated(0, bearingBoxHeight, 0);
-	bearingLeft.DrawWireframe();
 	bearingLeft.SetMaterialColor(COLOR_RED);
 	bearingLeft.DrawColor();
 	glPopMatrix();
@@ -1107,7 +1106,7 @@ void drawCottar3()
 {
 	glPushMatrix();
 	float positionY = 2 * baseFootHeight + baseBodyHeight * 0.25;
-	float positionZ = baseBodyWidth + cottar3Height / 2;
+	float positionZ = baseBodyWidth + cottar3Height;
 	glTranslated(0, positionY, positionZ);
 	glRotated(90, 1, 0, 0);
 	cottar3.SetMaterialColor(COLOR_DARK_GRAY);
@@ -1120,7 +1119,7 @@ void drawRotationDisk()
 {
 	glPushMatrix();
 	float positionY = 2 * baseFootHeight + baseBodyHeight;
-	float positionZ = baseBodyWidth + rotationDiskHeight / 2;
+	float positionZ = baseBodyWidth + rotationDiskHeight;
 	glTranslated(0, positionY, positionZ);
 	glRotated(90, 1, 0, 0);
 	rotationDisk.SetMaterialColor(COLOR_YELLOW);
@@ -1131,7 +1130,7 @@ void drawTayQuay()
 {
 	glPushMatrix();
 	float positionY = 2 * baseFootHeight + baseBodyHeight;
-	float positionZ = baseBodyWidth + rotationDiskHeight;
+	float positionZ = baseBodyWidth + rotationDiskHeight * 2;
 	glTranslated(0, positionY, positionZ);
 	// glRotated(crank.rotateZ, 0, 0, 1);
 	// glTranslated(crankLength / 2, 0, 0);
@@ -1165,7 +1164,7 @@ void drawMyObject()
 	drawBaseFoot();
 	drawBaseBody();
 	drawBaseHead();
-	// drawBearingLeft();
+	drawBearingLeft();
 	// drawBearingRight();
 	drawCottar3();
 	drawCottar2();
