@@ -154,6 +154,8 @@ public:
 	int numFaces;
 	Face *face;
 
+	float rotateX, rotateY, rotateZ;
+
 public:
 	Mesh()
 	{
@@ -1000,7 +1002,7 @@ void otherKeyController(unsigned char key, int x, int y)
 
 #pragma region MeshObjects
 
-float baseMeasure = 1.5f;
+float baseMeasure = 3.0f;
 
 Mesh baseFoot;
 float baseFootLength = baseMeasure;
@@ -1031,15 +1033,6 @@ float bearingOuterRadius = bearingBoxLength * 0.75;
 float bearingInnerRadius = bearingOuterRadius * 0.6;
 float bearingHeight = baseHeadHeight * 1.2 - bearingBoxHeight * 2 - bearingOuterRadius;
 
-// Chốt 3, 2, 1
-Mesh cottar3;
-float cottar3nSegment = 32;
-float cottar3Height = baseBodyWidth * 3.75;
-float cottar3Radius = baseBodyWidth;
-
-Mesh cottar2;
-Mesh cottar1;
-
 Mesh rotationDisk; // Bàn quay
 float rotationDisknSegment = 48;
 float rotationDiskHeight = baseBodyWidth;
@@ -1051,6 +1044,22 @@ float tayQuayLength = rotationDiskRadius * 0.88;
 float tayQuayHeight = rotationDiskHeight * 0.75;
 float tayQuayRadius = rotationDiskHeight * 0.8;
 
+// Chốt 3, 2, 1
+Mesh cottar3;
+float cottar3nSegment = 16;
+float cottar3Height = baseBodyWidth * 3.75;
+float cottar3Radius = baseBodyWidth;
+
+Mesh cottar2OuterCube;
+float cottar2OuterCubeSize = tayQuayHeight;
+
+Mesh cottar2;
+float cottar2nSegment = 24;
+float cottar2Height = cottar2OuterCubeSize;
+float cottar2Radius = cottar2OuterCubeSize * 0.7;
+
+Mesh cottar1;
+
 Mesh thanhLienKet;
 Mesh thanhChuU;
 Mesh thanhTruot;
@@ -1059,6 +1068,7 @@ void drawBaseFoot()
 {
 	glPushMatrix();
 	glTranslated(0, baseFootHeight, 0);
+	baseFoot.DrawWireframe();
 	baseFoot.SetMaterialColor(COLOR_RED);
 	baseFoot.DrawColor();
 	glPopMatrix();
@@ -1068,6 +1078,7 @@ void drawBaseBody()
 {
 	glPushMatrix();
 	glTranslated(0, 2 * baseFootHeight + baseBodyHeight, 0);
+	baseBody.DrawWireframe();
 	baseBody.SetMaterialColor(COLOR_GREEN);
 	baseBody.DrawColor();
 	glPopMatrix();
@@ -1078,21 +1089,36 @@ void drawBaseHead()
 	glPushMatrix();
 	float positionY = 2 * baseFootHeight + 2 * baseBodyHeight + baseHeadHeight;
 	glTranslated(0, positionY, 0);
+	baseHead.DrawWireframe();
 	baseHead.SetMaterialColor(COLOR_BLUE);
 	baseHead.DrawColor();
 	glPopMatrix();
 }
 
-void drawBearingLeft()
+void drawBearings()
 {
 	glPushMatrix();
-	float positionX = 0;
+	float positionX = baseHeadLength - bearingBoxWidth * 2;
 	float positionY = 2 * baseFootHeight + 2 * baseBodyHeight + baseHeadHeight;
 	float positionZ = baseHeadWidth + bearingBoxHeight;
 	glTranslated(positionX, positionY, positionZ);
+	bearingRightBox.SetMaterialColor(COLOR_RED);
+	glRotated(90, 1, 0, 0);
+	glRotated(90, 0, 1, 0);
+	bearingRightBox.DrawWireframe();
+	bearingRightBox.DrawColor();
+
+	glTranslated(0, bearingBoxHeight, 0);
+	bearingRight.SetMaterialColor(COLOR_RED);
+	bearingRight.DrawColor();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslated(-positionX, positionY, positionZ);
 	bearingLeftBox.SetMaterialColor(COLOR_RED);
 	glRotated(90, 1, 0, 0);
 	glRotated(90, 0, 1, 0);
+	bearingLeftBox.DrawWireframe();
 	bearingLeftBox.DrawColor();
 
 	glTranslated(0, bearingBoxHeight, 0);
@@ -1101,7 +1127,6 @@ void drawBearingLeft()
 	glPopMatrix();
 }
 
-void drawBearingRight() {}
 void drawCottar3()
 {
 	glPushMatrix();
@@ -1110,10 +1135,27 @@ void drawCottar3()
 	glTranslated(0, positionY, positionZ);
 	glRotated(90, 1, 0, 0);
 	cottar3.SetMaterialColor(COLOR_DARK_GRAY);
+	cottar3.DrawWireframe();
 	cottar3.DrawColor();
 	glPopMatrix();
 }
-void drawCottar2() {}
+void drawCottar2()
+{
+	glPushMatrix();
+	float positionX = 0;
+	float positionY = 2 * baseFootHeight + baseBodyHeight + tayQuayLength / 2;
+	float positionZ = baseBodyWidth + rotationDiskHeight + tayQuayHeight * 2 + cottar2Height * 2;
+	glTranslated(positionX, positionY, positionZ);
+	glRotated(tayQuay.rotateZ + 90, 0, 0, 1);
+	glRotated(90, 1, 0, 0);
+	cottar2.SetMaterialColor(COLOR_DARK_GRAY);
+	// cottar2.DrawWireframe();
+	cottar2.DrawColor();
+	cottar2OuterCube.SetMaterialColor(COLOR_RED);
+	cottar2OuterCube.DrawWireframe();
+	cottar2OuterCube.DrawColor();
+	glPopMatrix();
+}
 void drawCottar1() {}
 void drawRotationDisk()
 {
@@ -1123,19 +1165,20 @@ void drawRotationDisk()
 	glTranslated(0, positionY, positionZ);
 	glRotated(90, 1, 0, 0);
 	rotationDisk.SetMaterialColor(COLOR_YELLOW);
+	rotationDisk.DrawWireframe();
 	rotationDisk.DrawColor();
 	glPopMatrix();
 }
 void drawTayQuay()
 {
 	glPushMatrix();
-	float positionY = 2 * baseFootHeight + baseBodyHeight;
-	float positionZ = baseBodyWidth + rotationDiskHeight * 2;
+	float positionY = 2 * baseFootHeight + baseBodyHeight + tayQuayLength / 2;
+	float positionZ = baseBodyWidth + rotationDiskHeight + tayQuayHeight;
 	glTranslated(0, positionY, positionZ);
-	// glRotated(crank.rotateZ, 0, 0, 1);
-	// glTranslated(crankLength / 2, 0, 0);
+	glRotated(tayQuay.rotateZ + 90, 0, 0, 1);
 	glRotated(90, 1, 0, 0);
 	tayQuay.SetMaterialColor(COLOR_PINK);
+	tayQuay.DrawWireframe();
 	tayQuay.DrawColor();
 	glPopMatrix();
 }
@@ -1164,8 +1207,7 @@ void drawMyObject()
 	drawBaseFoot();
 	drawBaseBody();
 	drawBaseHead();
-	drawBearingLeft();
-	// drawBearingRight();
+	drawBearings();
 	drawCottar3();
 	drawCottar2();
 	drawCottar1();
@@ -1229,11 +1271,14 @@ void createObj()
 	baseBody.CreateRectangle(baseBodyLength, baseBodyHeight, baseBodyWidth);
 	baseHead.CreateRectangle(baseHeadLength, baseHeadHeight, baseHeadWidth);
 
+	bearingRightBox.CreateRectangle(bearingBoxLength, bearingBoxHeight, bearingBoxWidth);
+	bearingRight.CreateBearing(bearingHeight, bearingWidth, bearingNUpperSegment, bearingOuterRadius, bearingInnerRadius);
 	bearingLeftBox.CreateRectangle(bearingBoxLength, bearingBoxHeight, bearingBoxWidth);
 	bearingLeft.CreateBearing(bearingHeight, bearingWidth, bearingNUpperSegment, bearingOuterRadius, bearingInnerRadius);
 
 	cottar3.CreateCylinder(cottar3nSegment, cottar3Height, cottar3Radius);
-	// cottar2;
+	cottar2OuterCube.CreateCube(cottar2OuterCubeSize);
+	cottar2.CreateCylinder(cottar2nSegment, cottar2Height, cottar2Radius);
 	// cottar1;
 	rotationDisk.CreateCylinder(rotationDisknSegment, rotationDiskHeight, rotationDiskRadius);
 	tayQuay.CreateCrank(tayQuaynSegment, tayQuayLength, tayQuayRadius, tayQuayHeight);
