@@ -30,12 +30,8 @@ float ColorArr[COLORNUM][3] = {
 	{0.0, 0.0, 0.0},  // black 12
 	{1.0, 1.0, 1.0}}; // white 13
 
-int windowWidth = 1280;
-int windowHeight = 800;
-
-float cameraDistance = 5;
-float cameraHeight = 2.5;
-float cameraAngle = -30;
+int windowWidth = 720;
+int windowHeight = 720;
 
 #pragma region SupportClass
 // Define a point in 3D space
@@ -957,6 +953,51 @@ void printUsage()
 }
 #pragma endregion
 
+#pragma region camera
+float cameraDistance = 5;
+float cameraHeight = 2.5;
+float cameraAngle = -30;
+float cameraX, cameraY, cameraZ;
+float lookAtX, lookAtY, lookAtZ;
+
+void arrowKeyController(int key, int x, int y)
+{
+	switch (key)
+	{
+	case GLUT_KEY_UP:
+		cameraHeight += 0.5;
+		break;
+	case GLUT_KEY_DOWN:
+		cameraHeight -= 0.5;
+		break;
+	case GLUT_KEY_RIGHT:
+		cameraAngle += 5;
+		break;
+	case GLUT_KEY_LEFT:
+		cameraAngle -= 5;
+		break;
+	default:
+		break;
+	}
+	glutPostRedisplay();
+}
+
+void otherKeyController(unsigned char key, int x, int y)
+{
+	switch (key)
+	{
+	case '+':
+		cameraDistance += 0.5;
+		break;
+	case '-':
+		cameraDistance -= 0.5;
+		break;
+	}
+	glutPostRedisplay();
+}
+
+#pragma endregion
+
 #pragma region MeshObjects
 
 float baseMeasure = 1.5f;
@@ -967,14 +1008,14 @@ float baseFootWidth = baseFootLength * 0.37;
 float baseFootHeight = baseFootLength * 0.05;
 
 Mesh baseBody;
-float baseBodyLength = baseFootLength * 1.8 / 10.5;
-float baseBodyWidth = baseFootHeight * 0.5 / 0.6;
-float baseBodyHeight = baseFootLength * 0.9;
+float baseBodyLength = baseFootLength * 0.19;
+float baseBodyWidth = baseFootHeight;
+float baseBodyHeight = baseFootLength * 0.82;
 
 Mesh baseHead;
-float baseHeadLength = baseBodyLength * 9.5 / 1.75;
+float baseHeadLength = baseFootLength;
 float baseHeadWidth = baseBodyWidth;
-float baseHeadHeight = baseBodyHeight * 3.7 / 7.5;
+float baseHeadHeight = baseHeadLength * 0.35;
 
 Mesh bearingLeft;
 Mesh bearingLeftBox;
@@ -996,7 +1037,7 @@ float bearingInnerRadius = bearingOuterRadius * 0.6;
 // Chốt 3, 2, 1
 Mesh cottar3;
 float cottar3nSegment = 32;
-float cottar3Height = baseFootWidth * 1.1 / 2;
+float cottar3Height = baseFootWidth - baseBodyWidth;
 float cottar3Radius = baseBodyWidth;
 
 Mesh cottar2;
@@ -1141,12 +1182,18 @@ void displayMe(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	float cameraX = cameraDistance * sin(cameraAngle * PI / 180);
-	float cameraY = cameraHeight;
-	float cameraZ = cameraDistance * cos(cameraAngle * PI / 180);
+	cameraX = cameraDistance * sin(cameraAngle * PI / 180);
+	cameraY = cameraHeight;
+	cameraZ = cameraDistance * cos(cameraAngle * PI / 180);
 
-	gluLookAt(cameraX, cameraY, cameraZ, 0, 1, 0, 0, 1, 0);
-
+	if (cameraDistance == 0)
+	{
+		gluLookAt(cameraX, cameraY, cameraZ, lookAtX, lookAtY, lookAtZ, sinf(cameraAngle * PI / 180), 0, cosf(cameraAngle * PI / 180));
+	}
+	else
+	{
+		gluLookAt(cameraX, cameraY, cameraZ, lookAtX, lookAtY, lookAtZ, 0, 1, 0);
+	}
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, windowWidth, windowHeight);
 
@@ -1159,6 +1206,13 @@ void displayMe(void)
 
 void myInit()
 {
+	cameraAngle = -30;	  // Góc quay camera xung quanh trục Oy
+	cameraHeight = 5.5;	  // Chiều cao camera so với mặt phẳng xOz
+	cameraDistance = 6.5; // Khoảng cách đến trục Oy
+	lookAtX = 0;
+	lookAtY = 1;
+	lookAtZ = 0;
+
 	float fHalfSize = 4;
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glFrontFace(GL_CCW);
@@ -1203,6 +1257,8 @@ int main(int argc, char **argv)
 	// tmp.CreateBearing(bearingLength, bearingWidth, )
 
 	myInit();
+	glutKeyboardFunc(otherKeyController);
+	glutSpecialFunc(arrowKeyController);
 	glutDisplayFunc(displayMe);
 
 	glutMainLoop();
