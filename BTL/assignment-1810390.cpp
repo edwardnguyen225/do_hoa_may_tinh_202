@@ -1054,7 +1054,7 @@ Mesh cottar2OuterCube;
 float cottar2OuterCubeSize = tayQuayHeight;
 
 Mesh cottar2;
-float cottar2nSegment = 24;
+float cottar2nSegment = 6;
 float cottar2Height = cottar2OuterCubeSize;
 float cottar2Radius = cottar2OuterCubeSize * 0.7;
 
