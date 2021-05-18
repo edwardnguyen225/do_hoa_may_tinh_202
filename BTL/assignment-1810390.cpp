@@ -34,12 +34,13 @@ float ColorArr[COLORNUM][3] = {
 	{0.0, 0.0, 0.0},  // black 12
 	{1.0, 1.0, 1.0}}; // white 13
 
-int screenWidth = 1020;
-int screenHeight = screenWidth;
+float screenRatio = 16 / 9;
+int screenWidth = 1024;
+int screenHeight = screenWidth / screenRatio;
 float lookAtX, lookAtY, lookAtZ;
-float cameraDistance_init = 5;
-float cameraHeight_init = 2.5;
-float cameraAngle_init = -30;
+float cameraDistance_init = 10;
+float cameraHeight_init = 3.5;
+float cameraAngle_init = -35;
 float cameraDistance = cameraDistance_init;
 float cameraHeight = cameraHeight_init;
 float cameraAngle = cameraAngle_init;
@@ -2098,15 +2099,29 @@ void switchCameraView()
 		cameraHeight_init = cameraHeight;
 		cameraAngle_init = cameraAngle;
 
-		cameraDistance = 0.25;
-		cameraHeight = 12.5;
-		cameraAngle = 0;
+		cameraDistance = 0;
+		cameraHeight = 20;
+		cameraAngle = 180;
+		float fHalfSizeHorizontal = 10.0f;
+		float fHalfSizeVertical = fHalfSizeHorizontal / screenRatio;
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(-fHalfSizeHorizontal, fHalfSizeHorizontal, -fHalfSizeVertical, fHalfSizeVertical, -1000, 1000);
+
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 	}
 	else
 	{
 		cameraDistance = cameraDistance_init;
 		cameraHeight = cameraHeight_init;
 		cameraAngle = cameraAngle_init;
+		const float ar = (float)screenWidth / (float)screenHeight;
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glFrustum(-ar, ar, -1.0, 1.0, 1.5, 50.0);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 	}
 }
 
@@ -2156,16 +2171,11 @@ void myInit()
 	glEnable(GL_DEPTH_TEST);
 
 	// for camera angle view, more 3d look
-	const float ar = (float)screenWidth / (float)screenHeight;
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glFrustum(-ar, ar, -1.0, 1.0, 1.5, 50.0);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	switchCameraView();
 
-	glOrtho(-fHalfSize, fHalfSize, -fHalfSize, fHalfSize, -1000, 1000);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	// glOrtho(-fHalfSize, fHalfSize, -fHalfSize, fHalfSize, -1000, 1000);
+	// glMatrixMode(GL_MODELVIEW);
+	// glLoadIdentity();
 }
 
 void mySpecialKeyBoard(int key, int x, int y)
