@@ -342,7 +342,7 @@ public:
 		}
 	}
 
-	void SetMaterialColor(int colorIdx)
+	void SetColor(int colorIdx)
 	{
 		for (int f = 0; f < numFaces; f++)
 		{
@@ -1744,35 +1744,74 @@ float thanhTruotRadius = bearingInnerRadius;
 void createObject()
 {
 	baseFoot.CreateRectangular(baseFootLength, baseFootHeight, baseFootWidth);
+	baseFoot.SetColor(COLOR_RED);
+	baseFoot.CalculateFacesNorm();
 
 	baseBody.CreateRectangular(baseBodyLength, baseBodyHeight, baseBodyWidth);
+	baseBody.SetColor(COLOR_GREEN);
+	baseBody.CalculateFacesNorm();
+
+	baseHead.CreateRectangular(baseHeadLength, baseHeadHeight, baseHeadWidth);
+	baseHead.SetColor(COLOR_BLUE);
+	baseHead.CalculateFacesNorm();
 
 	cottar3.CreateCylinder(cottar3Segment, cottar3Height, cottar3Radius);
+	cottar3.SetColor(COLOR_DARK_GRAY);
+	cottar3.CalculateFacesNorm();
 
 	// Create thanhLienKet, disk, tayQuay before cottar 2 to fix motion bug
 	cottar2OuterCube.CreateCube(cottar2OuterCubeSize);
+	cottar2OuterCube.SetColor(COLOR_RED);
+	cottar2OuterCube.CalculateFacesNorm();
+
 	cottar2.CreateCylinder(cottar2Segment, cottar2Height, cottar2Radius);
+	cottar2.SetColor(COLOR_DARK_GRAY);
+	cottar2.CalculateFacesNorm();
 	cottar2.distance = 0.25;
 
 	tayQuay.CreateTayQuay(tayQuaySegments, tayQuayLength, tayQuayRadius, tayQuayHeight);
+	tayQuay.SetColor(COLOR_PINK);
+	tayQuay.CalculateFacesNorm();
 
 	thanhLienKet.CreateThanhLienKet(thanhLienKetnHalfSegment, thanhLienKetLengthOuter, thanhLienKetLengthInner, thanhLienKetRadius, thanhLienKetHeight, thanhLienKetWidthInner);
+	thanhLienKet.SetColor(COLOR_AQUA);
+	thanhLienKet.CalculateFacesNorm();
 
 	rotationDisk.CreateCylinder(rotationDiskSegment, rotationDiskHeight, rotationDiskRadius);
+	rotationDisk.SetColor(COLOR_YELLOW);
+	rotationDisk.CalculateFacesNorm();
 
 	cottar1OuterCube.CreateCube(cottar1OuterCubeSize);
+	cottar1OuterCube.SetColor(COLOR_RED);
+	cottar1OuterCube.CalculateFacesNorm();
+
 	cottar1.CreateCylinder(cottar1Segment, cottar1Height, cottar1Radius);
+	cottar1.SetColor(COLOR_DARK_GRAY);
+	cottar1.CalculateFacesNorm();
 
 	thanhU.CreateThanhU(thanhULength, thanhUHeight, thanhUSize);
-
-	baseHead.CreateRectangular(baseHeadLength, baseHeadHeight, baseHeadWidth);
+	thanhU.SetColor(COLOR_GRAY);
+	thanhU.CalculateFacesNorm();
 
 	bearingRightBox.CreateRectangular(bearingBoxLength, bearingBoxHeight, bearingBoxWidth);
+	bearingRightBox.SetColor(COLOR_RED);
+	bearingRightBox.CalculateFacesNorm();
+
 	bearingRight.CreateBearing(bearingHeight, bearingWidth, bearingNUpperSegment, bearingOuterRadius, bearingInnerRadius);
+	bearingRight.SetColor(COLOR_RED);
+	bearingRight.CalculateFacesNorm();
+
 	bearingLeftBox.CreateRectangular(bearingBoxLength, bearingBoxHeight, bearingBoxWidth);
+	bearingLeftBox.SetColor(COLOR_RED);
+	thanhU.CalculateFacesNorm();
+
 	bearingLeft.CreateBearing(bearingHeight, bearingWidth, bearingNUpperSegment, bearingOuterRadius, bearingInnerRadius);
+	bearingLeft.SetColor(COLOR_RED);
+	bearingLeft.CalculateFacesNorm();
 
 	thanhTruot.CreateCylinder(thanhTruotSegment, thanhTruotHeight, thanhTruotRadius);
+	thanhTruot.SetColor(COLOR_DARK_GRAY);
+	thanhTruot.CalculateFacesNorm();
 }
 
 void recalculateThanhLienKetAngle()
@@ -1837,7 +1876,6 @@ void drawBaseFoot()
 	glPushMatrix();
 	baseFoot.positionY = baseFootHeight;
 	glTranslated(baseFoot.positionX, baseFoot.positionY, baseFoot.positionZ);
-	baseFoot.SetMaterialColor(COLOR_RED);
 
 	if (bDrawWireFrame)
 		baseFoot.DrawWireframe();
@@ -1851,7 +1889,6 @@ void drawBaseBody()
 	glPushMatrix();
 	baseBody.positionY = baseFoot.positionY * 2 + baseBodyHeight;
 	glTranslated(baseBody.positionX, baseBody.positionY, baseBody.positionZ);
-	baseBody.SetMaterialColor(COLOR_GREEN);
 	if (bDrawWireFrame)
 		baseBody.DrawWireframe();
 	else
@@ -1864,7 +1901,6 @@ void drawBaseHead()
 	glPushMatrix();
 	baseHead.positionY = baseBody.positionY + baseBodyHeight + baseHeadHeight;
 	glTranslated(baseHead.positionX, baseHead.positionY, baseHead.positionZ);
-	baseHead.SetMaterialColor(COLOR_BLUE);
 	if (bDrawWireFrame)
 		baseHead.DrawWireframe();
 	else
@@ -1881,14 +1917,12 @@ void drawBearingRight()
 	glTranslated(bearingRightBox.positionX, bearingRightBox.positionY, bearingRightBox.positionZ);
 	glRotated(90, 1, 0, 0);
 	glRotated(90, 0, 1, 0);
-	bearingRightBox.SetMaterialColor(COLOR_RED);
 	if (bDrawWireFrame)
 		bearingRightBox.DrawWireframe();
 	else
 		bearingRightBox.DrawColor();
 
 	glTranslated(0, 0, 0);
-	bearingRight.SetMaterialColor(COLOR_RED);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -1915,14 +1949,12 @@ void drawBearingLeft()
 	glTranslated(bearingLeftBox.positionX, bearingLeftBox.positionY, bearingLeftBox.positionZ);
 	glRotated(90, 1, 0, 0);
 	glRotated(90, 0, 1, 0);
-	bearingLeftBox.SetMaterialColor(COLOR_RED);
 	if (bDrawWireFrame)
 		bearingLeftBox.DrawWireframe();
 	else
 		bearingLeftBox.DrawColor();
 
 	glTranslated(0, 0, 0);
-	bearingLeft.SetMaterialColor(COLOR_RED);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -1954,7 +1986,6 @@ void drawCottar3()
 	glTranslated(cottar3.positionX, cottar3.positionY, cottar3.positionZ);
 
 	glRotatef(90, 1, 0, 0);
-	cottar3.SetMaterialColor(COLOR_DARK_GRAY);
 	if (bDrawWireFrame)
 		cottar3.DrawWireframe();
 	else
@@ -1973,8 +2004,6 @@ void drawCottar2()
 	glTranslated(cottar2.positionX, cottar2.positionY, cottar2.positionZ);
 	glRotated(thanhLienKet.thanhLienKetAngle, 0, 0, 1);
 	glRotated(90, 1, 0, 0);
-	cottar2.SetMaterialColor(COLOR_DARK_GRAY);
-	cottar2OuterCube.SetMaterialColor(COLOR_RED);
 
 	if (bDrawWireFrame)
 	{
@@ -2002,9 +2031,6 @@ void drawCottar1()
 	glTranslated(cottar1.positionX, cottar1.positionY, cottar1.positionZ);
 	glRotated(90, 1, 0, 0);
 
-	cottar1.SetMaterialColor(COLOR_DARK_GRAY);
-	cottar1OuterCube.SetMaterialColor(COLOR_RED);
-
 	if (bDrawWireFrame)
 	{
 		cottar1.DrawWireframe();
@@ -2028,7 +2054,6 @@ void drawRotationDisk()
 	glTranslated(rotationDisk.positionX, rotationDisk.positionY, rotationDisk.positionZ);
 	glRotated(rotationDisk.rotateZ, 0, 0, 1);
 	glRotated(90, 1, 0, 0);
-	rotationDisk.SetMaterialColor(COLOR_YELLOW);
 	if (bDrawWireFrame)
 		rotationDisk.DrawWireframe();
 	else
@@ -2047,7 +2072,6 @@ void drawTayQuay()
 	glRotated(rotationDisk.rotateZ, 0, 0, 1);
 	glTranslated(tayQuayLength / 2, 0, 0);
 	glRotated(90, 1, 0, 0);
-	tayQuay.SetMaterialColor(COLOR_PINK);
 	if (bDrawWireFrame)
 		tayQuay.DrawWireframe();
 	else
@@ -2067,7 +2091,6 @@ void drawThanhLienKet()
 	glRotated(thanhLienKet.thanhLienKetAngle, 0, 0, 1);
 	glTranslated(thanhLienKetLengthOuter, 0, 0);
 	glRotated(90, 1, 0, 0);
-	thanhLienKet.SetMaterialColor(COLOR_AQUA);
 	if (bDrawWireFrame)
 		thanhLienKet.DrawWireframe();
 	else
@@ -2084,7 +2107,6 @@ void drawthanhU()
 	thanhU.positionZ = cottar1.positionZ;
 	glTranslated(thanhU.positionX, thanhU.positionY, thanhU.positionZ);
 
-	thanhU.SetMaterialColor(COLOR_GRAY);
 	if (bDrawWireFrame)
 		thanhU.DrawWireframe();
 	else
@@ -2101,7 +2123,6 @@ void drawThanhTruot()
 	thanhTruot.positionZ = baseHead.positionZ + baseHeadWidth + bearingBoxHeight * 2 + bearingHeight - bearingInnerRadius + thanhTruotRadius;
 	glTranslated(thanhTruot.positionX, thanhTruot.positionY, thanhTruot.positionZ);
 	glRotated(90, 0, 0, 1);
-	thanhTruot.SetMaterialColor(COLOR_DARK_GRAY);
 	if (bDrawWireFrame)
 		thanhTruot.DrawWireframe();
 	else
@@ -2205,10 +2226,6 @@ void myInit()
 
 	// for camera angle view, more 3d look
 	switchCameraView();
-
-	// glOrtho(-fHalfSize, fHalfSize, -fHalfSize, fHalfSize, -1000, 1000);
-	// glMatrixMode(GL_MODELVIEW);
-	// glLoadIdentity();
 }
 
 void mySpecialKeyBoard(int key, int x, int y)
