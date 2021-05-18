@@ -2106,7 +2106,7 @@ void switchCameraView()
 		cameraAngle_init = cameraAngle;
 
 		cameraDistance = 0.25;
-		cameraHeight = 45;
+		cameraHeight = 12.5;
 		cameraAngle = 0;
 	}
 	else
@@ -2161,8 +2161,15 @@ void myInit()
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glFrontFace(GL_CCW);
 	glEnable(GL_DEPTH_TEST);
+
+	// for camera angle view, more 3d look
+	const float ar = (float)screenWidth / (float)screenHeight;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+	glFrustum(-ar, ar, -1.0, 1.0, 1.5, 50.0);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
 	glOrtho(-fHalfSize, fHalfSize, -fHalfSize, fHalfSize, -1000, 1000);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
