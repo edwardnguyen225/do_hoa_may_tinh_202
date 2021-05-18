@@ -262,6 +262,7 @@ class Face
 public:
 	int nVerts;
 	VertexID *vert;
+	Vector3 facenorm; // Pháp tuyến của mặt.
 
 	Face()
 	{
@@ -323,6 +324,24 @@ public:
 		numFaces = 0;
 	}
 
+	void CalculateFacesNorm()
+	{
+		for (int f = 0; f < numFaces; f++)
+		{
+			float mx = 0, my = 0, mz = 0;
+			for (int v = 0; v < face[f].nVerts; v++)
+			{
+				int iv = face[f].vert[v].vertIndex;
+				int next = face[f].vert[(v + 1) % face[f].nVerts].vertIndex;
+				mx += (pt[iv].y - pt[next].y) * (pt[iv].z + pt[next].z);
+				my += (pt[iv].z - pt[next].z) * (pt[iv].x + pt[next].x);
+				mz += (pt[iv].x - pt[next].x) * (pt[iv].y + pt[next].y);
+			}
+			face[f].facenorm.set(mx, my, mz);
+			face[f].facenorm.normalize();
+		}
+	}
+
 	void SetMaterialColor(int colorIdx)
 	{
 		for (int f = 0; f < numFaces; f++)
@@ -364,6 +383,21 @@ public:
 				//            ic = f % COLORNUM;
 
 				glColor3f(ColorArr[ic][0], ColorArr[ic][1], ColorArr[ic][2]);
+				glVertex3f(pt[iv].x, pt[iv].y, pt[iv].z);
+			}
+			glEnd();
+		}
+	}
+
+	void Draw()
+	{
+		for (int f = 0; f < numFaces; f++)
+		{
+			glBegin(GL_POLYGON);
+			for (int v = 0; v < face[f].nVerts; v++)
+			{
+				int iv = face[f].vert[v].vertIndex;
+				glNormal3f(face[f].facenorm.x, face[f].facenorm.y, face[f].facenorm.z);
 				glVertex3f(pt[iv].x, pt[iv].y, pt[iv].z);
 			}
 			glEnd();
@@ -2199,7 +2233,6 @@ void mySpecialKeyBoard(int key, int x, int y)
 	default:
 		break;
 	}
-	cout << cameraDistance << " " << cameraHeight << " " << cameraAngle << endl;
 	glutPostRedisplay();
 }
 
