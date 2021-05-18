@@ -2116,10 +2116,9 @@ void switchCameraView()
 		cameraDistance = cameraDistance_init;
 		cameraHeight = cameraHeight_init;
 		cameraAngle = cameraAngle_init;
-		const float ar = (float)screenWidth / (float)screenHeight;
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glFrustum(-ar, ar, -1.0, 1.0, 1.5, 50.0);
+		glFrustum(-screenRatio, screenRatio, -1.0, 1.0, 1.5, 50.0);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 	}
