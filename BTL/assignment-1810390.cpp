@@ -353,6 +353,14 @@ public:
 		}
 	}
 
+	void setupMaterial(float ambient[], float diffuse[], float specular[], float shiness)
+	{
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shiness);
+	}
+
 	void DrawWireframe()
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
