@@ -1802,7 +1802,6 @@ void drawBaseFoot()
 	glPushMatrix();
 	baseFoot.positionY = baseFootHeight;
 	glTranslated(baseFoot.positionX, baseFoot.positionY, baseFoot.positionZ);
-	baseFoot.DrawWireframe();
 	baseFoot.SetMaterialColor(COLOR_RED);
 
 	if (bDrawWireFrame)
@@ -1920,7 +1919,6 @@ void drawCottar3()
 	glTranslated(cottar3.positionX, cottar3.positionY, cottar3.positionZ);
 
 	glRotatef(90, 1, 0, 0);
-	// cottar3.DrawWireframe();
 	cottar3.SetMaterialColor(COLOR_DARK_GRAY);
 	if (bDrawWireFrame)
 		cottar3.DrawWireframe();
@@ -1941,7 +1939,6 @@ void drawCottar2()
 	glRotated(thanhLienKet.thanhLienKetAngle, 0, 0, 1);
 	glRotated(90, 1, 0, 0);
 	cottar2.SetMaterialColor(COLOR_DARK_GRAY);
-	// cottar2.DrawWireframe();
 	cottar2OuterCube.SetMaterialColor(COLOR_RED);
 
 	if (bDrawWireFrame)
@@ -2047,13 +2044,11 @@ void drawThanhLienKet()
 void drawthanhU()
 {
 	glPushMatrix();
-	// thanhU.positionX = thanhLienKetLengthOuter * cos(thanhLienKet.thanhLienKetAngle * M_PI / 180);
 	thanhU.positionX = cottar1.positionX;
 	thanhU.positionY = baseFootHeight + 2 * baseBodyHeight - thanhUHeight - thanhTruotRadius / 2;
 	thanhU.positionZ = cottar1.positionZ;
 	glTranslated(thanhU.positionX, thanhU.positionY, thanhU.positionZ);
 
-	//    thanhU.DrawWireframe();
 	thanhU.SetMaterialColor(COLOR_GRAY);
 	if (bDrawWireFrame)
 		thanhU.DrawWireframe();
@@ -2068,11 +2063,9 @@ void drawThanhTruot()
 	glPushMatrix();
 	thanhTruot.positionX = thanhU.positionX;
 	thanhTruot.positionY = 2 * baseFootHeight + 2 * baseBodyHeight + baseHeadHeight;
-	// thanhTruot.positionZ = baseHeadWidth / 2 + bearingBoxHeight + bearingHeight + bearingInnerRadius;
 	thanhTruot.positionZ = baseHead.positionZ + baseHeadWidth + bearingBoxHeight * 2 + bearingHeight - bearingInnerRadius + thanhTruotRadius;
 	glTranslated(thanhTruot.positionX, thanhTruot.positionY, thanhTruot.positionZ);
 	glRotated(90, 0, 0, 1);
-	//    thanhTruot.DrawWireframe();
 	thanhTruot.SetMaterialColor(COLOR_DARK_GRAY);
 	if (bDrawWireFrame)
 		thanhTruot.DrawWireframe();
@@ -2141,7 +2134,7 @@ void displayMe(void)
 	}
 	glViewport(0, 0, screenWidth, screenHeight);
 
-	drawAxis();
+	// drawAxis();
 	drawAllObject();
 
 	glFlush();
