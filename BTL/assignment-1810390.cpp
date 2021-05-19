@@ -7,6 +7,7 @@
 
 using namespace std;
 // #define M_PI 3.141592653589793238462643383279502884
+
 #define COLORNUM 14
 #define COLOR_RED 0
 #define COLOR_GREEN 1
@@ -23,7 +24,7 @@ float ColorArr[COLORNUM][3] = {
 	{0.0, 1.0, 0.0},  // green 1
 	{0.0, 0.0, 1.0},  // blue 2
 	{1.0, 1.0, 0.0},  // yellow 3
-	{1.0, 0.0, 1.0},  // pink 4
+	{1.0, 0.75, 0.8}, // pink 4
 	{0.0, 1.0, 1.0},  // aqua 5
 	{0.3, 0.3, 0.3},  // dark gray 6
 	{0.5, 0.5, 0.5},  // gray 7
@@ -47,6 +48,7 @@ float cameraAngle = cameraAngle_init;
 
 bool bLockCamera = false;
 bool bDrawWireFrame = false;
+bool bLight1on = true;
 
 #pragma region SupportClass
 
@@ -290,6 +292,11 @@ public:
 	int numFaces;
 	Face *face;
 
+	GLfloat ambient[4] = {0.0, 0.0, 0.0, 1.0};
+	GLfloat diffuse[4] = {0.0, 0.0, 0.0, 1.0};
+	GLfloat specular[4] = {1.0, 1.0, 1.0, 1.0};
+	GLfloat shininess = 50.0f;
+
 	float rotateX, rotateY, rotateZ;
 	float positionX, positionY, positionZ;
 	float distance;
@@ -353,12 +360,66 @@ public:
 		}
 	}
 
-	void setupMaterial(float ambient[], float diffuse[], float specular[], float shiness)
+	void setupMaterial(const int &type)
 	{
+
+		if (type >= 0 && type < 13)
+		{
+			diffuse[0] = ColorArr[type][0];
+			diffuse[1] = ColorArr[type][1];
+			diffuse[2] = ColorArr[type][2];
+		}
+		else
+		{
+			ambient[0] = 1.0f;
+			ambient[1] = 1.0f;
+			ambient[2] = 1.0f;
+			diffuse[0] = 1.0f;
+			diffuse[1] = 1.0f;
+			diffuse[2] = 1.0f;
+		}
+
+		GLfloat ambient5 = 0.5f;
+		switch (type)
+		{
+		case COLOR_RED:
+		{
+			ambient[0] = ambient5;
+		}
+		break;
+		case COLOR_GREEN:
+		{
+			ambient[1] = ambient5;
+		}
+		break;
+		case COLOR_BLUE:
+		{
+			ambient[2] = ambient5;
+		}
+		break;
+		case COLOR_YELLOW:
+		{
+			ambient[0] = ambient5;
+		}
+		break;
+		case COLOR_PINK:
+		{
+			ambient[0] = ambient5;
+			ambient[2] = ambient5;
+		}
+		break;
+		default:
+		{
+			// ambient[0] = 1.0f;
+			// ambient[1] = 1.0f;
+			// ambient[2] = 1.0f;
+		}
+		break;
+		}
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
-		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shiness);
+		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
 	}
 
 	void DrawWireframe()
@@ -399,6 +460,7 @@ public:
 
 	void Draw()
 	{
+		glPushMatrix();
 		for (int f = 0; f < numFaces; f++)
 		{
 			glBegin(GL_POLYGON);
@@ -410,6 +472,7 @@ public:
 			}
 			glEnd();
 		}
+		glPopMatrix();
 	}
 
 	void CreateTetrahedron()
@@ -1752,74 +1815,40 @@ float thanhTruotRadius = bearingInnerRadius;
 void createObject()
 {
 	baseFoot.CreateRectangular(baseFootLength, baseFootHeight, baseFootWidth);
-	baseFoot.SetColor(COLOR_RED);
-	baseFoot.CalculateFacesNorm();
 
 	baseBody.CreateRectangular(baseBodyLength, baseBodyHeight, baseBodyWidth);
-	baseBody.SetColor(COLOR_GREEN);
-	baseBody.CalculateFacesNorm();
 
 	baseHead.CreateRectangular(baseHeadLength, baseHeadHeight, baseHeadWidth);
-	baseHead.SetColor(COLOR_BLUE);
-	baseHead.CalculateFacesNorm();
 
 	cottar3.CreateCylinder(cottar3Segment, cottar3Height, cottar3Radius);
-	cottar3.SetColor(COLOR_DARK_GRAY);
-	cottar3.CalculateFacesNorm();
 
 	// Create thanhLienKet, disk, tayQuay before cottar 2 to fix motion bug
 	cottar2OuterCube.CreateCube(cottar2OuterCubeSize);
-	cottar2OuterCube.SetColor(COLOR_RED);
-	cottar2OuterCube.CalculateFacesNorm();
 
 	cottar2.CreateCylinder(cottar2Segment, cottar2Height, cottar2Radius);
-	cottar2.SetColor(COLOR_DARK_GRAY);
-	cottar2.CalculateFacesNorm();
 	cottar2.distance = 0.25;
 
 	tayQuay.CreateTayQuay(tayQuaySegments, tayQuayLength, tayQuayRadius, tayQuayHeight);
-	tayQuay.SetColor(COLOR_PINK);
-	tayQuay.CalculateFacesNorm();
 
 	thanhLienKet.CreateThanhLienKet(thanhLienKetnHalfSegment, thanhLienKetLengthOuter, thanhLienKetLengthInner, thanhLienKetRadius, thanhLienKetHeight, thanhLienKetWidthInner);
-	thanhLienKet.SetColor(COLOR_AQUA);
-	thanhLienKet.CalculateFacesNorm();
 
 	rotationDisk.CreateCylinder(rotationDiskSegment, rotationDiskHeight, rotationDiskRadius);
-	rotationDisk.SetColor(COLOR_YELLOW);
-	rotationDisk.CalculateFacesNorm();
 
 	cottar1OuterCube.CreateCube(cottar1OuterCubeSize);
-	cottar1OuterCube.SetColor(COLOR_RED);
-	cottar1OuterCube.CalculateFacesNorm();
 
 	cottar1.CreateCylinder(cottar1Segment, cottar1Height, cottar1Radius);
-	cottar1.SetColor(COLOR_DARK_GRAY);
-	cottar1.CalculateFacesNorm();
 
 	thanhU.CreateThanhU(thanhULength, thanhUHeight, thanhUSize);
-	thanhU.SetColor(COLOR_GRAY);
-	thanhU.CalculateFacesNorm();
 
 	bearingRightBox.CreateRectangular(bearingBoxLength, bearingBoxHeight, bearingBoxWidth);
-	bearingRightBox.SetColor(COLOR_RED);
-	bearingRightBox.CalculateFacesNorm();
 
 	bearingRight.CreateBearing(bearingHeight, bearingWidth, bearingNUpperSegment, bearingOuterRadius, bearingInnerRadius);
-	bearingRight.SetColor(COLOR_RED);
-	bearingRight.CalculateFacesNorm();
 
 	bearingLeftBox.CreateRectangular(bearingBoxLength, bearingBoxHeight, bearingBoxWidth);
-	bearingLeftBox.SetColor(COLOR_RED);
-	thanhU.CalculateFacesNorm();
 
 	bearingLeft.CreateBearing(bearingHeight, bearingWidth, bearingNUpperSegment, bearingOuterRadius, bearingInnerRadius);
-	bearingLeft.SetColor(COLOR_RED);
-	bearingLeft.CalculateFacesNorm();
 
 	thanhTruot.CreateCylinder(thanhTruotSegment, thanhTruotHeight, thanhTruotRadius);
-	thanhTruot.SetColor(COLOR_DARK_GRAY);
-	thanhTruot.CalculateFacesNorm();
 }
 
 void recalculateThanhLienKetAngle()
@@ -1828,15 +1857,15 @@ void recalculateThanhLienKetAngle()
     calculate góc alpha trong tam giác sau
     với alpha = góc giữa cạnh
     (chốt 2) A --------- B (tâm bàn quay)
-            \       |
+               \       |
                 \      |
-                \     |
-                \    |
-                \   |
+                 \     |
+                  \    |
+                   \   |
                     \  |
-                    \ |
-                    \| <-- góc alpha
-                        C (chốt 1)
+                     \ |
+                      \| <-- góc alpha
+                       C (chốt 1)
     */
 	double disCottar3_2, disCottar3_DiskCenter, disCottar2_DiskCenter;
 	disCottar3_2 = sqrt(pow((cottar2.positionX - cottar3.positionX), 2) + pow((cottar2.positionY - cottar3.positionY), 2));
@@ -1863,7 +1892,7 @@ void drawAxis()
 {
 	glColor3f(0, 0, 1);
 	glBegin(GL_LINES);
-	glVertex3f(0, 0, 0);
+	glVertex3f(-4, 0, 0);
 	glVertex3f(4, 0, 0);
 	glEnd();
 
@@ -1879,16 +1908,26 @@ void drawAxis()
 	glVertex3f(0, 0, 4);
 	glEnd();
 }
+
+void drawPart_ColorOrWireframe(Mesh &part)
+{
+	// if (bDrawWireFrame)
+	// 	part.DrawWireframe();
+	// else
+	part.Draw();
+}
+
 void drawBaseFoot()
 {
 	glPushMatrix();
 	baseFoot.positionY = baseFootHeight;
 	glTranslated(baseFoot.positionX, baseFoot.positionY, baseFoot.positionZ);
 
-	if (bDrawWireFrame)
-		baseFoot.DrawWireframe();
-	else
-		baseFoot.DrawColor();
+	baseFoot.setupMaterial(COLOR_BLUE);
+	baseFoot.SetColor(COLOR_BLUE);
+	baseFoot.CalculateFacesNorm();
+	drawPart_ColorOrWireframe(baseFoot);
+
 	glPopMatrix();
 }
 
@@ -1897,10 +1936,12 @@ void drawBaseBody()
 	glPushMatrix();
 	baseBody.positionY = baseFoot.positionY * 2 + baseBodyHeight;
 	glTranslated(baseBody.positionX, baseBody.positionY, baseBody.positionZ);
-	if (bDrawWireFrame)
-		baseBody.DrawWireframe();
-	else
-		baseBody.DrawColor();
+	baseBody.setupMaterial(COLOR_BLUE);
+	baseBody.SetColor(COLOR_GREEN);
+	baseBody.CalculateFacesNorm();
+
+	drawPart_ColorOrWireframe(baseBody);
+
 	glPopMatrix();
 }
 
@@ -1909,10 +1950,12 @@ void drawBaseHead()
 	glPushMatrix();
 	baseHead.positionY = baseBody.positionY + baseBodyHeight + baseHeadHeight;
 	glTranslated(baseHead.positionX, baseHead.positionY, baseHead.positionZ);
-	if (bDrawWireFrame)
-		baseHead.DrawWireframe();
-	else
-		baseHead.DrawColor();
+	baseHead.setupMaterial(COLOR_BLUE);
+	baseHead.SetColor(COLOR_BLUE);
+	baseHead.CalculateFacesNorm();
+
+	drawPart_ColorOrWireframe(baseHead);
+
 	glPopMatrix();
 }
 
@@ -1925,10 +1968,10 @@ void drawBearingRight()
 	glTranslated(bearingRightBox.positionX, bearingRightBox.positionY, bearingRightBox.positionZ);
 	glRotated(90, 1, 0, 0);
 	glRotated(90, 0, 1, 0);
-	if (bDrawWireFrame)
-		bearingRightBox.DrawWireframe();
-	else
-		bearingRightBox.DrawColor();
+	bearingRightBox.setupMaterial(COLOR_RED);
+	bearingRightBox.SetColor(COLOR_RED);
+	bearingRightBox.CalculateFacesNorm();
+	drawPart_ColorOrWireframe(bearingRightBox);
 
 	glTranslated(0, 0, 0);
 	glPopMatrix();
@@ -1941,10 +1984,11 @@ void drawBearingRight()
 	glRotated(90, 1, 0, 0);
 	glRotated(90, 0, 1, 0);
 
-	if (bDrawWireFrame)
-		bearingRight.DrawWireframe();
-	else
-		bearingRight.DrawColor();
+	bearingRight.setupMaterial(COLOR_RED);
+	bearingRight.SetColor(COLOR_RED);
+	bearingRight.CalculateFacesNorm();
+	drawPart_ColorOrWireframe(bearingRight);
+
 	glPopMatrix();
 }
 
@@ -1957,10 +2001,11 @@ void drawBearingLeft()
 	glTranslated(bearingLeftBox.positionX, bearingLeftBox.positionY, bearingLeftBox.positionZ);
 	glRotated(90, 1, 0, 0);
 	glRotated(90, 0, 1, 0);
-	if (bDrawWireFrame)
-		bearingLeftBox.DrawWireframe();
-	else
-		bearingLeftBox.DrawColor();
+	bearingLeftBox.setupMaterial(COLOR_RED);
+	bearingLeft.SetColor(COLOR_RED);
+	bearingLeft.CalculateFacesNorm();
+
+	drawPart_ColorOrWireframe(bearingLeft);
 
 	glTranslated(0, 0, 0);
 	glPopMatrix();
@@ -1973,10 +2018,12 @@ void drawBearingLeft()
 	glRotated(90, 1, 0, 0);
 	glRotated(90, 0, 1, 0);
 
-	if (bDrawWireFrame)
-		bearingLeft.DrawWireframe();
-	else
-		bearingLeft.DrawColor();
+	bearingLeft.setupMaterial(COLOR_RED);
+	bearingLeftBox.SetColor(COLOR_RED);
+	bearingLeftBox.CalculateFacesNorm();
+
+	drawPart_ColorOrWireframe(bearingLeftBox);
+
 	glPopMatrix();
 }
 
@@ -1994,61 +2041,75 @@ void drawCottar3()
 	glTranslated(cottar3.positionX, cottar3.positionY, cottar3.positionZ);
 
 	glRotatef(90, 1, 0, 0);
-	if (bDrawWireFrame)
-		cottar3.DrawWireframe();
-	else
-		cottar3.DrawColor();
+	bearingLeft.setupMaterial(COLOR_DARK_GRAY);
+	cottar3.SetColor(COLOR_DARK_GRAY);
+	cottar3.CalculateFacesNorm();
+
+	drawPart_ColorOrWireframe(cottar3);
+
 	glPopMatrix();
 }
 
 void drawCottar2()
 {
-	glPushMatrix();
 	float offsetX = cottar2.distance * sin(rotationDisk.rotateZ * M_PI / 180);
 	float offsetY = cottar2.distance * cos(rotationDisk.rotateZ * M_PI / 180);
 	cottar2.positionX = -offsetX;
 	cottar2.positionY = rotationDisk.positionY + offsetY;
 	cottar2.positionZ = tayQuay.positionZ + tayQuayHeight * 2 + cottar2Height;
+	glPushMatrix();
 	glTranslated(cottar2.positionX, cottar2.positionY, cottar2.positionZ);
 	glRotated(thanhLienKet.thanhLienKetAngle, 0, 0, 1);
 	glRotated(90, 1, 0, 0);
+	cottar2.setupMaterial(COLOR_DARK_GRAY);
+	cottar2.SetColor(COLOR_DARK_GRAY);
+	cottar2.CalculateFacesNorm();
 
-	if (bDrawWireFrame)
-	{
-		cottar2.DrawWireframe();
-		cottar2OuterCube.DrawWireframe();
-	}
-	else
-	{
-		cottar2.DrawColor();
-		cottar2OuterCube.DrawColor();
-	}
+	drawPart_ColorOrWireframe(cottar2);
+
 	glPopMatrix();
+
+	glPushMatrix();
+	glTranslated(cottar2.positionX, cottar2.positionY, cottar2.positionZ);
+	glRotated(thanhLienKet.thanhLienKetAngle, 0, 0, 1);
+	glRotated(90, 1, 0, 0);
+	cottar2OuterCube.setupMaterial(COLOR_RED);
+	cottar2OuterCube.SetColor(COLOR_RED);
+	cottar2OuterCube.CalculateFacesNorm();
+
+	drawPart_ColorOrWireframe(cottar2OuterCube);
+
+	glPopMatrix();
+
 	recalculateThanhLienKetAngle();
 }
 
 void drawCottar1()
 {
 
-	glPushMatrix();
 	float rad = thanhLienKet.thanhLienKetAngle * M_PI / 180;
 	cottar1.positionX = thanhLienKetLengthOuter * 2 * cos(rad);
-	// cottar1.positionY = 2 * baseFootHeight + baseBodyHeight - thanhLienKetRadius + thanhLienKetLengthOuter * sin(rad);
 	cottar1.positionY = cottar3.positionY + thanhLienKetLengthOuter * 2 * sin(rad) - thanhLienKetRadius / 2;
 	cottar1.positionZ = thanhLienKet.positionZ + thanhLienKetHeight * 2 + cottar1Height;
+
+	glPushMatrix();
 	glTranslated(cottar1.positionX, cottar1.positionY, cottar1.positionZ);
 	glRotated(90, 1, 0, 0);
+	cottar1.setupMaterial(COLOR_DARK_GRAY);
+	cottar1.SetColor(COLOR_DARK_GRAY);
+	cottar1.CalculateFacesNorm();
 
-	if (bDrawWireFrame)
-	{
-		cottar1.DrawWireframe();
-		cottar1OuterCube.DrawWireframe();
-	}
-	else
-	{
-		cottar1.DrawColor();
-		cottar1OuterCube.DrawColor();
-	}
+	drawPart_ColorOrWireframe(cottar1);
+
+	glPopMatrix();
+	glPushMatrix();
+	glTranslated(cottar1.positionX, cottar1.positionY, cottar1.positionZ);
+	glRotated(90, 1, 0, 0);
+	cottar1OuterCube.setupMaterial(COLOR_RED);
+	cottar1OuterCube.SetColor(COLOR_RED);
+	cottar1OuterCube.CalculateFacesNorm();
+
+	drawPart_ColorOrWireframe(cottar1OuterCube);
 
 	glPopMatrix();
 }
@@ -2062,10 +2123,11 @@ void drawRotationDisk()
 	glTranslated(rotationDisk.positionX, rotationDisk.positionY, rotationDisk.positionZ);
 	glRotated(rotationDisk.rotateZ, 0, 0, 1);
 	glRotated(90, 1, 0, 0);
-	if (bDrawWireFrame)
-		rotationDisk.DrawWireframe();
-	else
-		rotationDisk.DrawColor();
+	rotationDisk.setupMaterial(COLOR_RED);
+	rotationDisk.SetColor(COLOR_RED);
+	rotationDisk.CalculateFacesNorm();
+
+	drawPart_ColorOrWireframe(rotationDisk);
 
 	glPopMatrix();
 }
@@ -2080,10 +2142,11 @@ void drawTayQuay()
 	glRotated(rotationDisk.rotateZ, 0, 0, 1);
 	glTranslated(tayQuayLength / 2, 0, 0);
 	glRotated(90, 1, 0, 0);
-	if (bDrawWireFrame)
-		tayQuay.DrawWireframe();
-	else
-		tayQuay.DrawColor();
+	tayQuay.setupMaterial(COLOR_PINK);
+	tayQuay.SetColor(COLOR_PINK);
+	tayQuay.CalculateFacesNorm();
+
+	drawPart_ColorOrWireframe(tayQuay);
 
 	glPopMatrix();
 }
@@ -2099,10 +2162,11 @@ void drawThanhLienKet()
 	glRotated(thanhLienKet.thanhLienKetAngle, 0, 0, 1);
 	glTranslated(thanhLienKetLengthOuter, 0, 0);
 	glRotated(90, 1, 0, 0);
-	if (bDrawWireFrame)
-		thanhLienKet.DrawWireframe();
-	else
-		thanhLienKet.DrawColor();
+	thanhLienKet.setupMaterial(COLOR_GREEN);
+	thanhLienKet.SetColor(COLOR_GREEN);
+	thanhLienKet.CalculateFacesNorm();
+
+	drawPart_ColorOrWireframe(thanhLienKet);
 
 	glPopMatrix();
 }
@@ -2115,10 +2179,11 @@ void drawthanhU()
 	thanhU.positionZ = cottar1.positionZ;
 	glTranslated(thanhU.positionX, thanhU.positionY, thanhU.positionZ);
 
-	if (bDrawWireFrame)
-		thanhU.DrawWireframe();
-	else
-		thanhU.DrawColor();
+	thanhU.setupMaterial(COLOR_DARK_GRAY);
+	thanhU.SetColor(COLOR_GRAY);
+	thanhU.CalculateFacesNorm();
+
+	drawPart_ColorOrWireframe(thanhU);
 
 	glPopMatrix();
 }
@@ -2131,10 +2196,12 @@ void drawThanhTruot()
 	thanhTruot.positionZ = baseHead.positionZ + baseHeadWidth + bearingBoxHeight * 2 + bearingHeight - bearingInnerRadius + thanhTruotRadius;
 	glTranslated(thanhTruot.positionX, thanhTruot.positionY, thanhTruot.positionZ);
 	glRotated(90, 0, 0, 1);
-	if (bDrawWireFrame)
-		thanhTruot.DrawWireframe();
-	else
-		thanhTruot.DrawColor();
+	thanhTruot.setupMaterial(COLOR_DARK_GRAY);
+	thanhTruot.SetColor(COLOR_DARK_GRAY);
+	thanhTruot.CalculateFacesNorm();
+
+	drawPart_ColorOrWireframe(thanhTruot);
+
 	glPopMatrix();
 }
 
@@ -2187,12 +2254,29 @@ void switchCameraView()
 	}
 }
 
+void switchSecondLight()
+{
+	if (bLight1on)
+	{
+		glEnable(GL_LIGHT1);
+		GLfloat diffuse1[] = {1.0f, 1.0f, 1.0f, 1.0f};
+		GLfloat specular1[] = {1.0f, 1.0f, 1.0f, 1.0f};
+		GLfloat ambient1[] = {0.4f, 0.4f, 0.4f, 1.0f};
+		GLfloat position1[] = {6.0f, 6.0f, 6.0f, 0.0f};
+
+		glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse1);
+		glLightfv(GL_LIGHT1, GL_AMBIENT, ambient1);
+		glLightfv(GL_LIGHT1, GL_SPECULAR, specular1);
+		glLightfv(GL_LIGHT1, GL_POSITION, position1);
+	}
+	else
+		glDisable(GL_LIGHT1);
+}
+
 void displayMe(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-	GLfloat light_position0[] = {10.0, 10.0, 10.0, 0.0};
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position0);
+	switchSecondLight();
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -2211,7 +2295,8 @@ void displayMe(void)
 	}
 	glViewport(0, 0, screenWidth, screenHeight);
 
-	// drawAxis();
+	drawAxis();
+
 	drawAllObject();
 
 	glFlush();
@@ -2220,9 +2305,6 @@ void displayMe(void)
 
 void myInit()
 {
-	cameraAngle = -30;	  // Góc quay camera xung quanh trục Oy
-	cameraHeight = 5.5;	  // Chiều cao camera so với mặt phẳng xOz
-	cameraDistance = 6.5; // Khoảng cách đến trục Oy
 	lookAtX = 0;
 	lookAtY = 1;
 	lookAtZ = 0;
@@ -2231,9 +2313,31 @@ void myInit()
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glFrontFace(GL_CCW);
 	glEnable(GL_DEPTH_TEST);
+	glShadeModel(GL_SMOOTH);
 
 	// for camera angle view, more 3d look
 	switchCameraView();
+
+	GLfloat lmodel_ambient[] = {0.0, 0.0, 0.0, 1.0};
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
+	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+
+	glEnable(GL_DEPTH_TEST);
+
+	GLfloat lightDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
+	GLfloat lightSpecular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+	GLfloat lightAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
+	GLfloat light_position1[] = {6.0f, 6.0f, 6.0f, 0.0f};
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position1);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpecular);
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	// GLfloat shininess = 40.0f;
+	// glMateriali(GL_FRONT, GL_SHININESS, shininess);
 }
 
 void mySpecialKeyBoard(int key, int x, int y)
@@ -2285,7 +2389,6 @@ void myKeyBoard(unsigned char key, int x, int y)
 		{
 			cottar2.distance += 0.05;
 		}
-		cout << cottar2.distance << endl;
 		break;
 	}
 	case '4': // Move cotter 2 in, nearer from center
@@ -2294,29 +2397,37 @@ void myKeyBoard(unsigned char key, int x, int y)
 		{
 			cottar2.distance -= 0.05;
 		}
-		cout << cottar2.distance << endl;
 		break;
 	}
 	case 'W': // Toggle draw wire frame mode
 	case 'w':
+	{
 		bDrawWireFrame = !bDrawWireFrame;
 		break;
+	}
 	case 'V': // Toggle View to front and back
 	case 'v':
+	{
 		bLockCamera = !bLockCamera;
 		switchCameraView();
 		break;
+	}
+	case 'D': // Toggle second light on or off
+	case 'd':
+	{
+		bLight1on = !bLight1on;
+		switchSecondLight();
+		break;
+	}
 	case '+': // Increase camera distance
 		if (bLockCamera)
 			break;
 		cameraDistance += 0.25;
-		cout << cameraDistance << " " << cameraHeight << " " << cameraAngle << endl;
 		break;
 	case '-': // Decrease camera distance
 		if (bLockCamera)
 			break;
 		cameraDistance -= 0.25;
-		cout << cameraDistance << " " << cameraHeight << " " << cameraAngle << endl;
 		break;
 	default:
 		break;
