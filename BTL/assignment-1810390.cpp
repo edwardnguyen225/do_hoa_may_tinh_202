@@ -460,6 +460,7 @@ public:
 
 	void Draw()
 	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		for (int f = 0; f < numFaces; f++)
 		{
 			glBegin(GL_POLYGON);
