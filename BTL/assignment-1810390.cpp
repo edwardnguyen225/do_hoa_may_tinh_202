@@ -1761,7 +1761,7 @@ float bearingInnerRadius = bearingOuterRadius * 0.6;
 float bearingHeight = baseHeadHeight * 1.2 - bearingBoxHeight * 2 - bearingOuterRadius;
 
 Mesh rotationDisk;
-float rotationDiskSegment = 48;
+float rotationDiskSegment = 64;
 float rotationDiskHeight = baseBodyWidth;
 float rotationDiskRadius = baseBodyLength * 1.5;
 float rotationSpeed = 5;
