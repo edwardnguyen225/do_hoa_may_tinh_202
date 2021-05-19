@@ -460,7 +460,6 @@ public:
 
 	void Draw()
 	{
-		glPushMatrix();
 		for (int f = 0; f < numFaces; f++)
 		{
 			glBegin(GL_POLYGON);
@@ -472,7 +471,6 @@ public:
 			}
 			glEnd();
 		}
-		glPopMatrix();
 	}
 
 	void CreateTetrahedron()
@@ -1911,10 +1909,10 @@ void drawAxis()
 
 void drawPart_ColorOrWireframe(Mesh &part)
 {
-	// if (bDrawWireFrame)
-	// 	part.DrawWireframe();
-	// else
-	part.Draw();
+	if (bDrawWireFrame)
+		part.DrawWireframe();
+	else
+		part.Draw();
 }
 
 void drawBaseFoot()
@@ -2002,10 +2000,10 @@ void drawBearingLeft()
 	glRotated(90, 1, 0, 0);
 	glRotated(90, 0, 1, 0);
 	bearingLeftBox.setupMaterial(COLOR_RED);
-	bearingLeft.SetColor(COLOR_RED);
-	bearingLeft.CalculateFacesNorm();
+	bearingLeftBox.SetColor(COLOR_RED);
+	bearingLeftBox.CalculateFacesNorm();
 
-	drawPart_ColorOrWireframe(bearingLeft);
+	drawPart_ColorOrWireframe(bearingLeftBox);
 
 	glTranslated(0, 0, 0);
 	glPopMatrix();
@@ -2019,10 +2017,10 @@ void drawBearingLeft()
 	glRotated(90, 0, 1, 0);
 
 	bearingLeft.setupMaterial(COLOR_RED);
-	bearingLeftBox.SetColor(COLOR_RED);
-	bearingLeftBox.CalculateFacesNorm();
+	bearingLeft.SetColor(COLOR_RED);
+	bearingLeft.CalculateFacesNorm();
 
-	drawPart_ColorOrWireframe(bearingLeftBox);
+	drawPart_ColorOrWireframe(bearingLeft);
 
 	glPopMatrix();
 }
@@ -2262,7 +2260,7 @@ void switchSecondLight()
 		GLfloat diffuse1[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		GLfloat specular1[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		GLfloat ambient1[] = {0.4f, 0.4f, 0.4f, 1.0f};
-		GLfloat position1[] = {6.0f, 6.0f, 6.0f, 0.0f};
+		GLfloat position1[] = {0.0f, 1.0f, -1.0f, 0.0f};
 
 		glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse1);
 		glLightfv(GL_LIGHT1, GL_AMBIENT, ambient1);
@@ -2294,10 +2292,9 @@ void displayMe(void)
 		gluLookAt(camera_x, camera_y, camera_z, lookAtX, lookAtY, lookAtZ, 0, 1, 0);
 	}
 	glViewport(0, 0, screenWidth, screenHeight);
+	drawAllObject();
 
 	drawAxis();
-
-	drawAllObject();
 
 	glFlush();
 	glutSwapBuffers();
