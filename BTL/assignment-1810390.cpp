@@ -2515,7 +2515,7 @@ void drawGach0(float x, float y, float z)
 	gachNen.SetColor(COLOR_PURPLE);
 	gachNen.DrawColor();
 
-	glTranslated(x, y + 0.0001, z);
+	glTranslated(0, 0.0001, 0);
 	vienLoai0.SetColor(COLOR_GRAY);
 	vienLoai0.DrawColor();
 	glPopMatrix();
@@ -2527,7 +2527,7 @@ void drawGach1(float x, float y, float z)
 	gachNen.SetColor(COLOR_PURPLE);
 	gachNen.DrawColor();
 
-	glTranslated(x, y + 0.0001, z);
+	glTranslated(0, 0.0001, 0);
 	glRotated(90, 0, 1, 0);
 	vienLoai0.SetColor(COLOR_GRAY);
 	vienLoai0.DrawColor();
@@ -2540,7 +2540,7 @@ void drawGach2(float x, float y, float z)
 	gachNen.SetColor(COLOR_PURPLE);
 	gachNen.DrawColor();
 
-	glTranslated(x, y + 0.0001, z);
+	glTranslated(0, 0.0001, 0);
 	vienLoai1_ChuThap.SetColor(COLOR_GRAY);
 	vienLoai1_ChuThap.DrawColor();
 	glPopMatrix();
@@ -2552,7 +2552,7 @@ void drawGach3(float x, float y, float z)
 	gachNen.SetColor(COLOR_PURPLE);
 	gachNen.DrawColor();
 
-	glTranslated(x, y + 0.0001, z);
+	glTranslated(0, 0.0001, 0);
 	vienLoai2.SetColor(COLOR_GRAY);
 	vienLoai2.DrawColor();
 	glPopMatrix();
@@ -2582,19 +2582,15 @@ void drawGachRandom(float x, float y, float z)
 void drawNen()
 {
 	glDisable(GL_LIGHTING);
-	// float x, y, z, limitHorizontal;
-	// limitHorizontal = 20;
-	// for (x = -limitHorizontal; x < limitHorizontal; x++)
-	// {
-	// 	for (z = -limitHorizontal; z < limitHorizontal; z++)
-	// 	{
-	// 		drawGachRandom(x, y, z);
-	// 	}
-	// }
-	// drawGach0(0, 0, 0);
-	drawGach1(0, 0, 0);
-	// drawGach2(0, 0, 0);
-	// drawGach3(0, 0, 0);
+	float x, y, z, limitHorizontal;
+	limitHorizontal = 20;
+	for (x = -limitHorizontal; x < limitHorizontal; x++)
+	{
+		for (z = -limitHorizontal; z < limitHorizontal; z++)
+		{
+			drawGachRandom(x, y, z);
+		}
+	}
 	glEnable(GL_LIGHTING);
 }
 
@@ -2609,7 +2605,7 @@ void switchCameraView()
 		cameraDistance = 0;
 		cameraHeight = 20;
 		cameraAngle = 180;
-		float fHalfSizeHorizontal = 1.0f;
+		float fHalfSizeHorizontal = 10.0f;
 		float fHalfSizeVertical = fHalfSizeHorizontal / screenRatio;
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -2671,7 +2667,7 @@ void displayMe(void)
 		gluLookAt(camera_x, camera_y, camera_z, lookAtX, lookAtY, lookAtZ, 0, 1, 0);
 	}
 	glViewport(0, 0, screenWidth, screenHeight);
-	// drawAllObject();
+	drawAllObject();
 	// drawAxis();
 
 	drawNen();
