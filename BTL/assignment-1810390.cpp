@@ -8,7 +8,7 @@
 using namespace std;
 // #define M_PI 3.141592653589793238462643383279502884
 
-#define COLORNUM 14
+#define COLORNUM 15
 #define COLOR_RED 0
 #define COLOR_GREEN 1
 #define COLOR_BLUE 2
@@ -17,23 +17,25 @@ using namespace std;
 #define COLOR_AQUA 5
 #define COLOR_DARK_GRAY 6
 #define COLOR_GRAY 7
-#define COLOR_BLACK 12
+#define COLOR_PURPLE 12
+#define COLOR_BLACK 13
 
 float ColorArr[COLORNUM][3] = {
-	{1.0, 0.0, 0.0},  // red 0
-	{0.0, 1.0, 0.0},  // green 1
-	{0.0, 0.0, 1.0},  // blue 2
-	{1.0, 1.0, 0.0},  // yellow 3
-	{1.0, 0.75, 0.8}, // pink 4
-	{0.0, 1.0, 1.0},  // aqua 5
-	{0.3, 0.3, 0.3},  // dark gray 6
-	{0.5, 0.5, 0.5},  // gray 7
-	{0.9, 0.9, 0.9},  // silver 8
-	{1.0, 0.5, 0.5},  // kinda pink pastel 9
-	{0.5, 1.0, 0.5},  // mint green 10
-	{0.5, 0.5, 1.0},  // not purple, more blue 11
-	{0.0, 0.0, 0.0},  // black 12
-	{1.0, 1.0, 1.0}}; // white 13
+	{1.0, 0.0, 0.0},	   // red 0
+	{0.0, 1.0, 0.0},	   // green 1
+	{0.0, 0.0, 1.0},	   // blue 2
+	{1.0, 1.0, 0.0},	   // yellow 3
+	{1.0, 0.75, 0.8},	   // pink 4
+	{0.0, 1.0, 1.0},	   // aqua 5
+	{0.3, 0.3, 0.3},	   // dark gray 6
+	{0.5, 0.5, 0.5},	   // gray 7
+	{0.9, 0.9, 0.9},	   // silver 8
+	{1.0, 0.5, 0.5},	   // kinda pink pastel 9
+	{0.5, 1.0, 0.5},	   // mint green 10
+	{0.5, 0.5, 1.0},	   // not purple, more blue 11
+	{0.792, 0.821, 0.984}, // purple 12
+	{0.0, 0.0, 0.0},	   // black 13
+	{1.0, 1.0, 1.0}};	   // white 14
 
 float screenRatio = 16 / 9;
 int screenWidth = 1024;
@@ -672,7 +674,7 @@ public:
 
 	void CreateRectangular(float fLength, float fWidth, float fHeight)
 	{
-		int numVerts = 8;
+		numVerts = 8;
 		pt = new Point3[numVerts];
 		pt[0].set(-fLength, fWidth, fHeight);
 		pt[1].set(fLength, fWidth, fHeight);
@@ -1726,6 +1728,69 @@ public:
 		mau++;
 		i++;
 	}
+
+	void CreateGachNen(float fWidth)
+	{
+		int i;
+		numVerts = 4;
+		pt = new Point3[numVerts];
+
+		pt[0].set(-fWidth, 0, fWidth);
+		pt[1].set(fWidth, 0, fWidth);
+		pt[2].set(fWidth, 0, -fWidth);
+		pt[3].set(-fWidth, 0, -fWidth);
+
+		numFaces = 1;
+		face = new Face[numFaces];
+		face[0].nVerts = 4;
+		face[0].vert = new VertexID[face[0].nVerts];
+		face[0].vert[0].vertIndex = 0;
+		face[0].vert[1].vertIndex = 1;
+		face[0].vert[2].vertIndex = 2;
+		face[0].vert[3].vertIndex = 3;
+		for (i = 0; i < face[0].nVerts; i++)
+			face[0].vert[i].colorIndex = 0;
+	}
+
+	void CreateVienChuThap(float fWidthGach)
+	{
+		int i;
+		numVerts = 8;
+		pt = new Point3[numVerts];
+
+		float fVienWidth = fWidthGach * 24 / 64;
+		float fVienWidthHalf = fVienWidth / 2;
+
+		pt[0].set(-fVienWidthHalf, 0, fWidthGach);
+		pt[1].set(fVienWidthHalf, 0, fWidthGach);
+		pt[2].set(fWidthGach, 0, fVienWidthHalf);
+		pt[3].set(fWidthGach, 0, -fVienWidthHalf);
+		pt[4].set(fVienWidthHalf, 0, -fWidthGach);
+		pt[5].set(-fVienWidthHalf, 0, -fWidthGach);
+		pt[6].set(-fWidthGach, 0, -fVienWidthHalf);
+		pt[7].set(-fWidthGach, 0, fVienWidthHalf);
+
+		cout << "Debuging" << endl;
+		numFaces = 2;
+		face = new Face[numFaces];
+		face[0].nVerts = 4;
+		face[0].vert = new VertexID[face[0].nVerts];
+		face[0].vert[0].vertIndex = 0;
+		face[0].vert[1].vertIndex = 1;
+		face[0].vert[2].vertIndex = 4;
+		face[0].vert[3].vertIndex = 5;
+		for (i = 0; i < face[0].nVerts; i++)
+			face[0].vert[i].colorIndex = 0;
+
+		face[1].nVerts = 4;
+		face[1].vert = new VertexID[face[0].nVerts];
+		face[1].vert[0].vertIndex = 2;
+		face[1].vert[1].vertIndex = 3;
+		face[1].vert[2].vertIndex = 6;
+		face[1].vert[3].vertIndex = 7;
+		for (i = 0; i < face[1].nVerts; i++)
+			face[1].vert[i].colorIndex = 0;
+	}
 };
 
 #pragma endregion
@@ -2220,6 +2285,76 @@ void drawAllObject()
 	drawThanhTruot();
 }
 
+Mesh gachNen;
+Mesh vienChuThap;
+float gachWidth = 1;
+float gachHeight = 0;
+
+void createGach()
+{
+	gachNen.CreateGachNen(gachWidth);
+	vienChuThap.CreateVienChuThap(gachWidth);
+}
+
+void drawGach0(float x, float y, float z)
+{
+}
+void drawGach1(float x, float y, float z)
+{
+}
+void drawGach2(float x, float y, float z)
+{
+	glPushMatrix();
+	glTranslated(x, y, z);
+	gachNen.SetColor(COLOR_PURPLE);
+	gachNen.DrawColor();
+
+	glTranslated(x, y + 0.0001, z);
+	vienChuThap.SetColor(COLOR_GRAY);
+	vienChuThap.DrawColor();
+	glPopMatrix();
+}
+void drawGach3(float x, float y, float z)
+{
+}
+
+void drawGachRandom(float x, float y, float z)
+{
+	// int randomGachNo = rand() % 4;
+	int soGach = abs(int(x + z) % 4);
+	switch (soGach)
+	{
+	case 0:
+		drawGach0(x, y, z);
+		break;
+	case 1:
+		drawGach1(x, y, z);
+		break;
+	case 2:
+		drawGach2(x, y, z);
+		break;
+	case 3:
+		drawGach3(x, y, z);
+		break;
+	}
+}
+
+void drawNen()
+{
+	glDisable(GL_LIGHTING);
+	// float x, y, z, limitHorizontal;
+	// limitHorizontal = 20;
+	// for (x = -limitHorizontal; x < limitHorizontal; x++)
+	// {
+	// 	for (z = -limitHorizontal; z < limitHorizontal; z++)
+	// 	{
+	// 		drawGachRandom(x, y, z);
+	// 	}
+	// }
+	drawGach2(0, 0, 0);
+	glEnable(GL_LIGHTING);
+}
+
 void switchCameraView()
 {
 	if (bLockCamera)
@@ -2293,9 +2428,10 @@ void displayMe(void)
 		gluLookAt(camera_x, camera_y, camera_z, lookAtX, lookAtY, lookAtZ, 0, 1, 0);
 	}
 	glViewport(0, 0, screenWidth, screenHeight);
-	drawAllObject();
+	// drawAllObject();
+	// drawAxis();
 
-	drawAxis();
+	drawNen();
 
 	glFlush();
 	glutSwapBuffers();
@@ -2460,6 +2596,7 @@ int main(int argc, char **argv)
 	glutCreateWindow("Nguyen Tri Nhan - 1810390");
 
 	createObject();
+	createGach();
 	myInit();
 	glutSpecialFunc(mySpecialKeyBoard);
 	glutKeyboardFunc(myKeyBoard);
