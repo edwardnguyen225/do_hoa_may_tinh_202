@@ -2027,7 +2027,7 @@ Mesh bearingRightBox;
 float bearingBoxLength = baseHeadHeight * 0.55;
 float bearingBoxHeight = baseHeadWidth * 0.6;
 float bearingBoxWidth = bearingBoxLength * 0.26;
-int bearingNUpperSegment = 32;
+int bearingNUpperSegment = 18;
 float bearingWidth = bearingBoxWidth;
 float bearingOuterRadius = bearingBoxLength * 0.75;
 float bearingInnerRadius = bearingOuterRadius * 0.6;
@@ -2080,7 +2080,7 @@ float thanhUHeight = baseHeadHeight * 1.05;
 float thanhUSize = cottar1Height;
 
 Mesh thanhTruot;
-int thanhTruotSegment = 48;
+int thanhTruotSegment = 28;
 float thanhTruotHeight = baseHeadLength * 1.75;
 float thanhTruotRadius = bearingInnerRadius;
 
