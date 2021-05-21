@@ -1752,7 +1752,93 @@ public:
 			face[0].vert[i].colorIndex = 0;
 	}
 
-	void CreateVienChuThap(float fWidthGach)
+	void CreateVienLoai0(float fWidthGach)
+	{
+		int nSegments = 64;
+		int nSegmentsQuater = nSegments / 4;
+		GLfloat alpha = 2 * M_PI / nSegments;
+		numVerts = 4 * nSegments;
+		pt = new Point3[numVerts];
+
+		float fVienWidth = fWidthGach * 24 / 64;
+		float fVienWidthHalf = fVienWidth / 2;
+		float radiusOuter = fWidthGach + fVienWidthHalf;
+		float radiusInner = radiusOuter - fVienWidth;
+
+		int i = 0;
+
+		float centerX = -fWidthGach;
+		float centerZ = fWidthGach;
+
+		// Setup left bottom corner
+		// pt[i++].set(centerX, 0, centerZ);
+		// Set verticles outer circle left bottom
+		int startFirstCircleOuter = i;
+		for (int j = 0; j < nSegmentsQuater + 1; j++)
+		{
+			pt[i++].set(centerX + radiusOuter * cos(j * alpha), 0, centerZ - radiusOuter * sin(j * alpha));
+		}
+		int startFirstCircleInner = i;
+		// Set verticles outer circle left bottom
+		for (int j = 0; j < nSegmentsQuater + 1; j++)
+		{
+			pt[i++].set(centerX + radiusInner * cos(j * alpha), 0, centerZ - radiusInner * sin(j * alpha));
+		}
+
+		// Setup right top corner
+		centerX = fWidthGach;
+		centerZ = -fWidthGach;
+		int startSecondCircleOuter = i;
+		// Set verticles outer circle left bottom
+		for (int j = 0; j < nSegmentsQuater + 1; j++)
+		{
+			pt[i++].set(centerX - radiusOuter * cos(j * alpha), 0, centerZ + radiusOuter * sin(j * alpha));
+		}
+		int startSecondCircleInner = i;
+		// Set verticles outer circle left bottom
+		for (int j = 0; j < nSegmentsQuater + 1; j++)
+		{
+			pt[i++].set(centerX - radiusInner * cos(j * alpha), 0, centerZ + radiusInner * sin(j * alpha));
+		}
+
+		numFaces = nSegments * 2;
+		face = new Face[numFaces];
+		i = 0;
+		int color = 0;
+
+		// Draw left bottom corner - second circle
+		for (int j = startFirstCircleOuter; j < startFirstCircleOuter + nSegmentsQuater; j++)
+		{
+			face[i].nVerts = 4;
+			face[i].vert = new VertexID[face[i].nVerts];
+			face[i].vert[0].vertIndex = j;
+			face[i].vert[1].vertIndex = j + 1;
+			face[i].vert[2].vertIndex = j + 1 + nSegmentsQuater + 1;
+			face[i].vert[3].vertIndex = j + nSegmentsQuater + 1;
+			for (int k = 0; k < face[i].nVerts; k++)
+			{
+				face[i].vert[k].colorIndex = color;
+			}
+			i++;
+		}
+
+		for (int j = startSecondCircleOuter; j < startSecondCircleOuter + nSegmentsQuater; j++)
+		{
+			face[i].nVerts = 4;
+			face[i].vert = new VertexID[face[i].nVerts];
+			face[i].vert[1].vertIndex = j;
+			face[i].vert[0].vertIndex = j + 1;
+			face[i].vert[3].vertIndex = j + 1 + nSegmentsQuater + 1;
+			face[i].vert[2].vertIndex = j + nSegmentsQuater + 1;
+			for (int k = 0; k < face[i].nVerts; k++)
+			{
+				face[i].vert[k].colorIndex = color;
+			}
+			i++;
+		}
+	}
+
+	void CreateVienLoai1_ChuThap(float fWidthGach)
 	{
 		int i;
 		numVerts = 8;
@@ -1770,7 +1856,6 @@ public:
 		pt[6].set(-fWidthGach, 0, -fVienWidthHalf);
 		pt[7].set(-fWidthGach, 0, fVienWidthHalf);
 
-		cout << "Debuging" << endl;
 		numFaces = 2;
 		face = new Face[numFaces];
 		face[0].nVerts = 4;
@@ -1790,6 +1875,129 @@ public:
 		face[1].vert[3].vertIndex = 7;
 		for (i = 0; i < face[1].nVerts; i++)
 			face[1].vert[i].colorIndex = 0;
+	}
+
+	void CreateVienLoai2(float fWidthGach)
+	{
+		int nSegments = 32;
+		GLfloat alpha = 2 * M_PI / nSegments;
+		numVerts = 2 * nSegments + 4 * 4;
+		pt = new Point3[numVerts];
+
+		float fVienWidth = fWidthGach * 24 / 64;
+		float fVienWidthHalf = fVienWidth / 2;
+		float radiusOuter = fWidthGach * 24 / 32;
+		float radiusInner = radiusOuter - fVienWidth;
+
+		int i = 0;
+
+		// Set vertices upper rectangle
+		pt[i++].set(-fVienWidthHalf, 0, radiusInner);
+		pt[i++].set(-fVienWidthHalf, 0, fWidthGach);
+		pt[i++].set(fVienWidthHalf, 0, fWidthGach);
+		pt[i++].set(fVienWidthHalf, 0, radiusInner);
+
+		// Set vertices right rectangle
+		pt[i++].set(radiusInner, 0, fVienWidthHalf);
+		pt[i++].set(fWidthGach, 0, fVienWidthHalf);
+		pt[i++].set(fWidthGach, 0, -fVienWidthHalf);
+		pt[i++].set(radiusInner, 0, -fVienWidthHalf);
+
+		// Set vertices bottom rectangle
+		pt[i++].set(-fVienWidthHalf, 0, -radiusInner);
+		pt[i++].set(fVienWidthHalf, 0, -radiusInner);
+		pt[i++].set(fVienWidthHalf, 0, -fWidthGach);
+		pt[i++].set(-fVienWidthHalf, 0, -fWidthGach);
+
+		// Set vertices right rectangle
+		pt[i++].set(-radiusInner, 0, fVienWidthHalf);
+		pt[i++].set(-radiusInner, 0, -fVienWidthHalf);
+		pt[i++].set(-fWidthGach, 0, -fVienWidthHalf);
+		pt[i++].set(-fWidthGach, 0, fVienWidthHalf);
+
+		// Set verticles outer circle
+		for (int j = 0; j < nSegments; j++)
+		{
+			pt[i++].set(radiusOuter * cos(j * alpha), 0, radiusOuter * sin(j * alpha));
+		}
+		// Set vertices inner circle
+		for (int j = 0; j < nSegments; j++)
+		{
+			pt[i++].set(radiusInner * cos(j * alpha), 0, radiusInner * sin(j * alpha));
+		}
+
+		numFaces = 4 + nSegments;
+		face = new Face[numFaces];
+		i = 0;
+		int color = 0;
+
+		// Draw upper rectangle
+		face[i].nVerts = 4;
+		face[i].vert = new VertexID[face[i].nVerts];
+		face[i].vert[0].vertIndex = 0;
+		face[i].vert[1].vertIndex = 1;
+		face[i].vert[2].vertIndex = 2;
+		face[i].vert[3].vertIndex = 3;
+		for (int k = 0; k < face[i].nVerts; k++)
+		{
+			face[i].vert[k].colorIndex = color;
+		}
+		i++;
+
+		// Draw right rectangle
+		face[i].nVerts = 4;
+		face[i].vert = new VertexID[face[i].nVerts];
+		face[i].vert[0].vertIndex = 4;
+		face[i].vert[1].vertIndex = 5;
+		face[i].vert[2].vertIndex = 6;
+		face[i].vert[3].vertIndex = 7;
+		for (int k = 0; k < face[i].nVerts; k++)
+		{
+			face[i].vert[k].colorIndex = color;
+		}
+		i++;
+
+		// Draw bottom rectangle
+		face[i].nVerts = 4;
+		face[i].vert = new VertexID[face[i].nVerts];
+		face[i].vert[0].vertIndex = 8;
+		face[i].vert[1].vertIndex = 9;
+		face[i].vert[2].vertIndex = 10;
+		face[i].vert[3].vertIndex = 11;
+		for (int k = 0; k < face[i].nVerts; k++)
+		{
+			face[i].vert[k].colorIndex = color;
+		}
+		i++;
+
+		// Draw left rectangle
+		face[i].nVerts = 4;
+		face[i].vert = new VertexID[face[i].nVerts];
+		face[i].vert[0].vertIndex = 12;
+		face[i].vert[1].vertIndex = 13;
+		face[i].vert[2].vertIndex = 14;
+		face[i].vert[3].vertIndex = 15;
+		for (int k = 0; k < face[i].nVerts; k++)
+		{
+			face[i].vert[k].colorIndex = color;
+		}
+		i++;
+
+		// Draw circle outline
+		for (int j = 16; j < nSegments + 15; j++)
+		{
+			face[i].nVerts = 4;
+			face[i].vert = new VertexID[face[i].nVerts];
+			face[i].vert[0].vertIndex = j;
+			face[i].vert[1].vertIndex = j + 1;
+			face[i].vert[2].vertIndex = j + 1 + nSegments;
+			face[i].vert[3].vertIndex = j + nSegments;
+			for (int k = 0; k < face[i].nVerts; k++)
+			{
+				face[i].vert[k].colorIndex = color;
+			}
+			i++;
+		}
 	}
 };
 
@@ -1847,7 +2055,7 @@ float cottar2OuterCubeSize = tayQuayHeight;
 
 Mesh cottar2;
 int cottar2Segment = 6;
-float cottar2Height = cottar2OuterCubeSize;
+float cottar2Height = cottar2OuterCubeSize + 0.001;
 float cottar2Radius = cottar2OuterCubeSize * 0.7;
 
 Mesh cottar1OuterCube;
@@ -1855,7 +2063,7 @@ float cottar1OuterCubeSize = tayQuayHeight;
 
 Mesh cottar1;
 int cottar1Segment = 6;
-float cottar1Height = cottar2OuterCubeSize;
+float cottar1Height = cottar2OuterCubeSize + 0.001;
 float cottar1Radius = cottar2OuterCubeSize * 0.7;
 
 Mesh thanhLienKet;
@@ -2286,21 +2494,44 @@ void drawAllObject()
 }
 
 Mesh gachNen;
-Mesh vienChuThap;
-float gachWidth = 1;
+Mesh vienLoai0;
+Mesh vienLoai1_ChuThap;
+Mesh vienLoai2;
+float gachWidth = 0.5;
 float gachHeight = 0;
 
 void createGach()
 {
 	gachNen.CreateGachNen(gachWidth);
-	vienChuThap.CreateVienChuThap(gachWidth);
+	vienLoai0.CreateVienLoai0(gachWidth);
+	vienLoai1_ChuThap.CreateVienLoai1_ChuThap(gachWidth);
+	vienLoai2.CreateVienLoai2(gachWidth);
 }
 
 void drawGach0(float x, float y, float z)
 {
+	glPushMatrix();
+	glTranslated(x, y, z);
+	gachNen.SetColor(COLOR_PURPLE);
+	gachNen.DrawColor();
+
+	glTranslated(x, y + 0.0001, z);
+	vienLoai0.SetColor(COLOR_GRAY);
+	vienLoai0.DrawColor();
+	glPopMatrix();
 }
 void drawGach1(float x, float y, float z)
 {
+	glPushMatrix();
+	glTranslated(x, y, z);
+	gachNen.SetColor(COLOR_PURPLE);
+	gachNen.DrawColor();
+
+	glTranslated(x, y + 0.0001, z);
+	glRotated(90, 0, 1, 0);
+	vienLoai0.SetColor(COLOR_GRAY);
+	vienLoai0.DrawColor();
+	glPopMatrix();
 }
 void drawGach2(float x, float y, float z)
 {
@@ -2310,12 +2541,21 @@ void drawGach2(float x, float y, float z)
 	gachNen.DrawColor();
 
 	glTranslated(x, y + 0.0001, z);
-	vienChuThap.SetColor(COLOR_GRAY);
-	vienChuThap.DrawColor();
+	vienLoai1_ChuThap.SetColor(COLOR_GRAY);
+	vienLoai1_ChuThap.DrawColor();
 	glPopMatrix();
 }
 void drawGach3(float x, float y, float z)
 {
+	glPushMatrix();
+	glTranslated(x, y, z);
+	gachNen.SetColor(COLOR_PURPLE);
+	gachNen.DrawColor();
+
+	glTranslated(x, y + 0.0001, z);
+	vienLoai2.SetColor(COLOR_GRAY);
+	vienLoai2.DrawColor();
+	glPopMatrix();
 }
 
 void drawGachRandom(float x, float y, float z)
@@ -2351,7 +2591,10 @@ void drawNen()
 	// 		drawGachRandom(x, y, z);
 	// 	}
 	// }
-	drawGach2(0, 0, 0);
+	// drawGach0(0, 0, 0);
+	drawGach1(0, 0, 0);
+	// drawGach2(0, 0, 0);
+	// drawGach3(0, 0, 0);
 	glEnable(GL_LIGHTING);
 }
 
@@ -2366,7 +2609,7 @@ void switchCameraView()
 		cameraDistance = 0;
 		cameraHeight = 20;
 		cameraAngle = 180;
-		float fHalfSizeHorizontal = 10.0f;
+		float fHalfSizeHorizontal = 1.0f;
 		float fHalfSizeVertical = fHalfSizeHorizontal / screenRatio;
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
