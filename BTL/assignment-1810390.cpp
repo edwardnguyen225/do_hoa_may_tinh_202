@@ -1,6 +1,12 @@
+// ===========================================================================
+// ||					Bai tap lon Do Hoa May Tinh							||
+// ||					Ten: 	Nguyen Tri Nhan								||
+// ||					MSSV:	1810390										||
+// ===========================================================================
+
 #include <math.h>
 #include <iostream>
-// #include <windows.h>
+#include <windows.h>
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <cmath>
