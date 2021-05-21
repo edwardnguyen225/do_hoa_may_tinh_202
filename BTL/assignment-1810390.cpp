@@ -2493,6 +2493,9 @@ void drawAllObject()
 	drawThanhTruot();
 }
 
+const int limitHorizontal = 30;
+int gachIDList[limitHorizontal * 2][limitHorizontal * 2] = {};
+
 Mesh gachNen;
 Mesh vienLoai0;
 Mesh vienLoai1_ChuThap;
@@ -2506,6 +2509,16 @@ void createGach()
 	vienLoai0.CreateVienLoai0(gachWidth);
 	vienLoai1_ChuThap.CreateVienLoai1_ChuThap(gachWidth);
 	vienLoai2.CreateVienLoai2(gachWidth);
+
+	int gachID;
+	for (int i = 0; i < limitHorizontal * 2; i++)
+	{
+		for (int j = 0; j < limitHorizontal * 2; j++)
+		{
+			gachID = rand() % 4;
+			gachIDList[i][j] = gachID;
+		}
+	}
 }
 
 void drawGach0(float x, float y, float z)
@@ -2578,17 +2591,37 @@ void drawGachRandom(float x, float y, float z)
 		break;
 	}
 }
+void drawGach(float x, float y, float z, int gachID)
+{
+	switch (gachID)
+	{
+	case 0:
+		drawGach0(x, y, z);
+		break;
+	case 1:
+		drawGach1(x, y, z);
+		break;
+	case 2:
+		drawGach2(x, y, z);
+		break;
+	case 3:
+		drawGach3(x, y, z);
+		break;
+	}
+}
 
 void drawNen()
 {
 	glDisable(GL_LIGHTING);
-	float x, y, z, limitHorizontal;
-	limitHorizontal = 20;
+	float x, y, z;
+	int gachID;
 	for (x = -limitHorizontal; x < limitHorizontal; x++)
 	{
 		for (z = -limitHorizontal; z < limitHorizontal; z++)
 		{
-			drawGachRandom(x, y, z);
+			gachID = gachIDList[int(x) + limitHorizontal][int(z) + limitHorizontal];
+			// drawGachRandom(x, y, z);
+			drawGach(x, y, z, gachID);
 		}
 	}
 	glEnable(GL_LIGHTING);
