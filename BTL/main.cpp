@@ -2614,6 +2614,7 @@ void drawNen()
 {
 	glDisable(GL_LIGHTING);
 	float x, y, z;
+	y = 0;
 	int gachID;
 	for (x = -limitHorizontal; x < limitHorizontal; x++)
 	{
