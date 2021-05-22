@@ -12,7 +12,7 @@
 #include <cmath>
 
 using namespace std;
-// #define M_PI 3.141592653589793238462643383279502884
+#define M_PI 3.141592653589793238462643383279502884
 
 #define COLORNUM 15
 #define COLOR_RED 0
@@ -2620,6 +2620,7 @@ void drawNen()
 {
 	glDisable(GL_LIGHTING);
 	float x, y, z;
+	y = 0;
 	int gachID;
 	for (x = -limitHorizontal; x < limitHorizontal; x++)
 	{
