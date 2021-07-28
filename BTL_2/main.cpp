@@ -555,6 +555,140 @@ public:
 			face[5].vert[i].colorIndex = 5;
 	}
 
+	void CreateCylinder(int nSegment, float fHeight, float fRadius)
+	{
+		numVerts = nSegment * 2 + 2;
+		pt = new Point3[numVerts];
+
+		int i;
+		int idx;
+		float fAngle = 2 * M_PI / nSegment;
+		float x, y, z;
+
+		pt[0].set(0, fHeight, 0);
+		for (i = 0; i < nSegment; i++)
+		{
+			x = fRadius * cos(fAngle * i);
+			z = fRadius * sin(fAngle * i);
+			y = fHeight;
+			pt[i + 1].set(x, y, z);
+			pt[i + 1 + nSegment].set(x, -y, z);
+		}
+		pt[numVerts - 1].set(0, -fHeight, 0);
+
+		numFaces = nSegment * 3;
+		face = new Face[numFaces];
+
+		idx = 0;
+		for (i = 0; i < nSegment; i++)
+		{
+			face[idx].nVerts = 3;
+			face[idx].vert = new VertexID[face[idx].nVerts];
+			face[idx].vert[0].vertIndex = 0;
+			if (i < nSegment - 1)
+				face[idx].vert[1].vertIndex = i + 2;
+			else
+				face[idx].vert[1].vertIndex = 1;
+			face[idx].vert[2].vertIndex = i + 1;
+			idx++;
+		}
+
+		for (i = 0; i < nSegment; i++)
+		{
+			face[idx].nVerts = 4;
+			face[idx].vert = new VertexID[face[idx].nVerts];
+
+			face[idx].vert[0].vertIndex = i + 1;
+			if (i < nSegment - 1)
+				face[idx].vert[1].vertIndex = i + 2;
+			else
+				face[idx].vert[1].vertIndex = 1;
+			face[idx].vert[2].vertIndex = face[idx].vert[1].vertIndex + nSegment;
+			face[idx].vert[3].vertIndex = face[idx].vert[0].vertIndex + nSegment;
+
+			idx++;
+		}
+
+		for (i = 0; i < nSegment; i++)
+		{
+			face[idx].nVerts = 3;
+			face[idx].vert = new VertexID[face[idx].nVerts];
+			face[idx].vert[0].vertIndex = numVerts - 1;
+			if (i < nSegment - 1)
+				face[idx].vert[2].vertIndex = i + 2 + nSegment;
+			else
+				face[idx].vert[2].vertIndex = 1 + nSegment;
+			face[idx].vert[1].vertIndex = i + 1 + nSegment;
+			idx++;
+		}
+	}
+
+	void CreateCylinderHalf(int nSegment, float fHeight, float fRadius)
+	{
+		numVerts = (nSegment + 1) * 2 + 2;
+		pt = new Point3[numVerts];
+
+		int i;
+		int idx;
+		float fAngle = M_PI / nSegment;
+		float x, y, z;
+
+		pt[0].set(0, fHeight, 0);
+		pt[numVerts - 1].set(0, -fHeight, 0);
+		for (i = 0; i <= nSegment; i++)
+		{
+			x = fRadius * cos(fAngle * i);
+			z = fRadius * sin(fAngle * i);
+			y = fHeight;
+			pt[i + 1].set(x, y, z);
+			pt[i + 2 + nSegment].set(x, -y, z);
+		}
+
+		numFaces = nSegment * 3 + 1;
+		face = new Face[numFaces];
+
+		idx = 0;
+		for (i = 0; i < nSegment; i++)
+		{
+			face[idx].nVerts = 3;
+			face[idx].vert = new VertexID[face[idx].nVerts];
+			face[idx].vert[0].vertIndex = 0;
+			face[idx].vert[1].vertIndex = i + 1;
+			face[idx].vert[2].vertIndex = i + 2;
+			idx++;
+		}
+
+		for (i = 0; i < nSegment; i++)
+		{
+			face[idx].nVerts = 4;
+			face[idx].vert = new VertexID[face[idx].nVerts];
+
+			face[idx].vert[0].vertIndex = i + 1;
+			face[idx].vert[1].vertIndex = i + 2;
+			face[idx].vert[2].vertIndex = i + 3 + nSegment;
+			face[idx].vert[3].vertIndex = i + 2 + nSegment;
+			idx++;
+		}
+
+		for (i = nSegment + 2; i < numVerts - 2; i++)
+		{
+			face[idx].nVerts = 3;
+			face[idx].vert = new VertexID[face[idx].nVerts];
+			face[idx].vert[0].vertIndex = numVerts - 1;
+			face[idx].vert[1].vertIndex = i;
+			face[idx].vert[2].vertIndex = i + 1;
+			idx++;
+		}
+
+		// Draw last face
+		face[idx].nVerts = 4;
+		face[idx].vert = new VertexID[face[idx].nVerts];
+		face[idx].vert[0].vertIndex = 1;
+		face[idx].vert[1].vertIndex = nSegment + 1;
+		face[idx].vert[2].vertIndex = numVerts - 2;
+		face[idx].vert[3].vertIndex = nSegment + 2;
+	}
+
 	void CreateGachNen(float fWidth)
 	{
 		int i;
@@ -829,7 +963,7 @@ public:
 
 #pragma endregion
 
-float baseWidth = 0.5;
+float baseWidth = 1;
 float baseHeight = baseWidth * 0.6;
 
 Mesh rectangular0;
@@ -842,11 +976,18 @@ float rectangular1Width = baseWidth;
 float rectangular1Length = rectangular1Width * 1.3;
 float rectangular1Height = baseHeight;
 
+Mesh cylinderHalf;
+float cylinderHalfSegments = 9;
+float cylinderHalfHeight = baseHeight;
+float cylinderHalfRadius = baseWidth;
+
 void createObject()
 {
 	rectangular0.CreateRectangular(rectangular0Length, rectangular0Height, rectangular0Width);
 
 	rectangular1.CreateRectangular(rectangular1Length, rectangular1Height, rectangular1Width);
+
+	cylinderHalf.CreateCylinderHalf(cylinderHalfSegments, cylinderHalfHeight, cylinderHalfRadius);
 }
 
 void drawAxis()
@@ -909,10 +1050,27 @@ void drawRectangular1()
 	glPopMatrix();
 }
 
+void drawCylinderHalf()
+{
+	glPushMatrix();
+	cylinderHalf.positionY = baseHeight;
+	cylinderHalf.positionX = -rectangular0Length;
+	glTranslated(cylinderHalf.positionX, cylinderHalf.positionY, cylinderHalf.positionZ);
+	glRotated(-90, 0, 1, 0);
+
+	cylinderHalf.setupMaterial(COLOR_RED);
+	cylinderHalf.SetColor(COLOR_RED);
+	cylinderHalf.CalculateFacesNorm();
+	drawPart_ColorOrWireframe(cylinderHalf);
+
+	glPopMatrix();
+}
+
 void drawAllObject()
 {
 	drawRectangular0();
 	drawRectangular1();
+	drawCylinderHalf();
 }
 
 void switchCameraView()
@@ -1066,6 +1224,16 @@ void myKeyBoard(unsigned char key, int x, int y)
 		bDrawWireFrame = !bDrawWireFrame;
 		break;
 	}
+	case '+': // Increase camera distance
+		if (bLockCamera)
+			break;
+		cameraDistance += 0.25;
+		break;
+	case '-': // Decrease camera distance
+		if (bLockCamera)
+			break;
+		cameraDistance -= 0.25;
+		break;
 	default:
 		break;
 	}
