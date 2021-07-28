@@ -829,16 +829,24 @@ public:
 
 #pragma endregion
 
-float baseMeasure = 2;
+float baseWidth = 0.5;
+float baseHeight = baseWidth * 0.6;
 
-Mesh baseFoot;
-float baseFootLength = baseMeasure;
-float baseFootWidth = baseFootLength * 0.37;
-float baseFootHeight = baseFootLength * 0.05;
+Mesh rectangular0;
+float rectangular0Width = baseWidth;
+float rectangular0Length = rectangular0Width * 2;
+float rectangular0Height = baseHeight;
+
+Mesh rectangular1;
+float rectangular1Width = baseWidth;
+float rectangular1Length = rectangular1Width * 1.3;
+float rectangular1Height = baseHeight;
 
 void createObject()
 {
-	baseFoot.CreateRectangular(baseFootLength, baseFootHeight, baseFootWidth);
+	rectangular0.CreateRectangular(rectangular0Length, rectangular0Height, rectangular0Width);
+
+	rectangular1.CreateRectangular(rectangular1Length, rectangular1Height, rectangular1Width);
 }
 
 void drawAxis()
@@ -870,23 +878,41 @@ void drawPart_ColorOrWireframe(Mesh &part)
 		part.Draw();
 }
 
-void drawBaseFoot()
+void drawRectangular0()
 {
 	glPushMatrix();
-	baseFoot.positionY = baseFootHeight;
-	glTranslated(baseFoot.positionX, baseFoot.positionY, baseFoot.positionZ);
+	rectangular0.positionY = baseHeight;
+	glTranslated(rectangular0.positionX, rectangular0.positionY, rectangular0.positionZ);
 
-	baseFoot.setupMaterial(COLOR_BLUE);
-	baseFoot.SetColor(COLOR_BLUE);
-	baseFoot.CalculateFacesNorm();
-	drawPart_ColorOrWireframe(baseFoot);
+	rectangular0.setupMaterial(COLOR_RED);
+	rectangular0.SetColor(COLOR_RED);
+	rectangular0.CalculateFacesNorm();
+	drawPart_ColorOrWireframe(rectangular0);
+
+	glPopMatrix();
+}
+
+void drawRectangular1()
+{
+	glPushMatrix();
+	rectangular1.positionY = baseHeight;
+	rectangular1.positionX = rectangular0Length + baseWidth;
+	rectangular1.positionZ = baseWidth * 2 + (rectangular1Length - baseWidth);
+	glTranslated(rectangular1.positionX, rectangular1.positionY, rectangular1.positionZ);
+	glRotated(90, 0, 1, 0);
+
+	rectangular1.setupMaterial(COLOR_RED);
+	rectangular1.SetColor(COLOR_RED);
+	rectangular1.CalculateFacesNorm();
+	drawPart_ColorOrWireframe(rectangular1);
 
 	glPopMatrix();
 }
 
 void drawAllObject()
 {
-	drawBaseFoot();
+	drawRectangular0();
+	drawRectangular1();
 }
 
 void switchCameraView()
@@ -963,7 +989,7 @@ void displayMe(void)
 	}
 	glViewport(0, 0, screenWidth, screenHeight);
 	drawAllObject();
-	// drawAxis();
+	drawAxis();
 
 	glFlush();
 	glutSwapBuffers();
@@ -1006,6 +1032,31 @@ void myInit()
 	// glMateriali(GL_FRONT, GL_SHININESS, shininess);
 }
 
+void mySpecialKeyBoard(int key, int x, int y)
+{
+	if (bLockCamera)
+		return;
+
+	switch (key)
+	{
+	case GLUT_KEY_UP:
+		cameraHeight += 0.5;
+		break;
+	case GLUT_KEY_DOWN:
+		cameraHeight -= 0.5;
+		break;
+	case GLUT_KEY_RIGHT:
+		cameraAngle += 5;
+		break;
+	case GLUT_KEY_LEFT:
+		cameraAngle -= 5;
+		break;
+	default:
+		break;
+	}
+	glutPostRedisplay();
+}
+
 void myKeyBoard(unsigned char key, int x, int y)
 {
 	switch (key)
@@ -1038,6 +1089,7 @@ int main(int argc, char **argv)
 
 	createObject();
 	myInit();
+	glutSpecialFunc(mySpecialKeyBoard);
 	glutKeyboardFunc(myKeyBoard);
 	glutDisplayFunc(displayMe);
 
