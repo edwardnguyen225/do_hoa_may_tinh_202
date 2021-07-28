@@ -1037,8 +1037,16 @@ public:
 
 #pragma endregion
 
-float baseWidth = 1;
+float baseMeasure = 1;
+float baseMeasureDelta = 0.025;
+
+float baseWidth = baseMeasure;
 float baseHeight = baseWidth * 0.6;
+
+float basePositionX = 0;
+float basePositionZ = 0;
+float basePositionY = baseHeight;
+float basePositionDelta = 0.1;
 
 Mesh rectangular0;
 float rectangular0Width = baseWidth;
@@ -1103,7 +1111,7 @@ void drawPart_ColorOrWireframe(Mesh &part)
 void drawRectangular0()
 {
 	glPushMatrix();
-	rectangular0.positionY = baseHeight;
+	rectangular0.positionY = basePositionY;
 	glTranslated(rectangular0.positionX, rectangular0.positionY, rectangular0.positionZ);
 
 	rectangular0.setupMaterial(COLOR_RED);
@@ -1117,7 +1125,7 @@ void drawRectangular0()
 void drawRectangular1()
 {
 	glPushMatrix();
-	rectangular1.positionY = baseHeight;
+	rectangular1.positionY = basePositionY;
 	rectangular1.positionX = rectangular0Length + baseWidth;
 	rectangular1.positionZ = baseWidth * 2 + (rectangular1Length - baseWidth);
 	glTranslated(rectangular1.positionX, rectangular1.positionY, rectangular1.positionZ);
@@ -1134,7 +1142,7 @@ void drawRectangular1()
 void drawCylinderHalf()
 {
 	glPushMatrix();
-	cylinderHalf.positionY = baseHeight;
+	cylinderHalf.positionY = basePositionY;
 	cylinderHalf.positionX = -rectangular0Length;
 	glTranslated(cylinderHalf.positionX, cylinderHalf.positionY, cylinderHalf.positionZ);
 	glRotated(-90, 0, 1, 0);
@@ -1150,7 +1158,7 @@ void drawCylinderHalf()
 void drawCylinderAQuater()
 {
 	glPushMatrix();
-	cylinderAQuater.positionY = baseHeight;
+	cylinderAQuater.positionY = basePositionY;
 	cylinderAQuater.positionX = rectangular0Length;
 	cylinderAQuater.positionZ = baseWidth;
 	glTranslated(cylinderAQuater.positionX, cylinderAQuater.positionY, cylinderAQuater.positionZ);
@@ -1318,6 +1326,59 @@ void myKeyBoard(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
+	case 'U': // Move obj up
+	case 'u':
+	{
+		basePositionY += basePositionDelta;
+		break;
+	}
+	case 'D': // Move obj down
+	case 'd':
+	{
+		basePositionY -= basePositionDelta;
+		break;
+	}
+	// TODO: need fixing
+	case 'I': // Increase obj size
+	case 'i':
+	{
+		baseMeasure += baseMeasureDelta;
+		createObject();
+		drawAllObject();
+		cout << "BIGGGGGGGGGGGGGGGGGER" << endl;
+		break;
+	}
+	// TODO: need fixing
+	case 'O': // Decrease obj size
+	case 'o':
+	{
+		baseMeasure -= baseMeasureDelta;
+		createObject();
+		drawAllObject();
+		cout << "smaller" << endl;
+		break;
+	}
+	// TODO: Add rotation around X
+	case 'X': // Rotate around the x axis
+	case 'x':
+	{
+		cout << "rotate X" << endl;
+		break;
+	}
+	// TODO: Add rotation around Y
+	case 'Y': // Rotate around the y axis
+	case 'y':
+	{
+		cout << "rotate Y" << endl;
+		break;
+	}
+	// TODO: Add rotation around Z
+	case 'Z': // Rotate around the z axis
+	case 'z':
+	{
+		cout << "rotate Z" << endl;
+		break;
+	}
 	case '1': // Toggle draw wire frame mode
 	{
 		bDrawWireFrame = !bDrawWireFrame;
