@@ -689,6 +689,80 @@ public:
 		face[idx].vert[3].vertIndex = nSegment + 2;
 	}
 
+	void CreateCylinderAQuater(int nSegment, float fHeight, float fRadius)
+	{
+		numVerts = (nSegment + 1) * 2 + 2;
+		pt = new Point3[numVerts];
+
+		int i;
+		int idx;
+		float fAngle = (M_PI / 2) / nSegment;
+		float x, y, z;
+
+		pt[0].set(0, fHeight, 0);
+		pt[numVerts - 1].set(0, -fHeight, 0);
+		for (i = 0; i <= nSegment; i++)
+		{
+			x = fRadius * cos(fAngle * i);
+			z = fRadius * sin(fAngle * i);
+			y = fHeight;
+			pt[i + 1].set(x, y, z);
+			pt[i + 2 + nSegment].set(x, -y, z);
+		}
+
+		numFaces = nSegment * 3 + 2;
+		face = new Face[numFaces];
+
+		idx = 0;
+		for (i = 0; i < nSegment; i++)
+		{
+			face[idx].nVerts = 3;
+			face[idx].vert = new VertexID[face[idx].nVerts];
+			face[idx].vert[0].vertIndex = 0;
+			face[idx].vert[1].vertIndex = i + 1;
+			face[idx].vert[2].vertIndex = i + 2;
+			idx++;
+		}
+
+		for (i = 0; i < nSegment; i++)
+		{
+			face[idx].nVerts = 4;
+			face[idx].vert = new VertexID[face[idx].nVerts];
+
+			face[idx].vert[0].vertIndex = i + 1;
+			face[idx].vert[1].vertIndex = i + 2;
+			face[idx].vert[2].vertIndex = i + 3 + nSegment;
+			face[idx].vert[3].vertIndex = i + 2 + nSegment;
+			idx++;
+		}
+
+		for (i = nSegment + 2; i < numVerts - 2; i++)
+		{
+			face[idx].nVerts = 3;
+			face[idx].vert = new VertexID[face[idx].nVerts];
+			face[idx].vert[0].vertIndex = numVerts - 1;
+			face[idx].vert[1].vertIndex = i;
+			face[idx].vert[2].vertIndex = i + 1;
+			idx++;
+		}
+
+		// Draw last 2 faces
+		face[idx].nVerts = 4;
+		face[idx].vert = new VertexID[face[idx].nVerts];
+		face[idx].vert[0].vertIndex = 0;
+		face[idx].vert[1].vertIndex = numVerts - 1;
+		face[idx].vert[2].vertIndex = nSegment + 2;
+		face[idx].vert[3].vertIndex = 1;
+		idx++;
+
+		face[idx].nVerts = 4;
+		face[idx].vert = new VertexID[face[idx].nVerts];
+		face[idx].vert[0].vertIndex = 0;
+		face[idx].vert[1].vertIndex = numVerts - 1;
+		face[idx].vert[2].vertIndex = numVerts - 2;
+		face[idx].vert[3].vertIndex = nSegment + 1;
+	}
+
 	void CreateGachNen(float fWidth)
 	{
 		int i;
@@ -981,6 +1055,11 @@ float cylinderHalfSegments = 9;
 float cylinderHalfHeight = baseHeight;
 float cylinderHalfRadius = baseWidth;
 
+Mesh cylinderAQuater;
+float cylinderAQuaterSegments = 10;
+float cylinderAQuaterHeight = baseHeight;
+float cylinderAQuaterRadius = baseWidth * 2;
+
 void createObject()
 {
 	rectangular0.CreateRectangular(rectangular0Length, rectangular0Height, rectangular0Width);
@@ -988,6 +1067,8 @@ void createObject()
 	rectangular1.CreateRectangular(rectangular1Length, rectangular1Height, rectangular1Width);
 
 	cylinderHalf.CreateCylinderHalf(cylinderHalfSegments, cylinderHalfHeight, cylinderHalfRadius);
+
+	cylinderAQuater.CreateCylinderAQuater(cylinderAQuaterSegments, cylinderAQuaterHeight, cylinderAQuaterRadius);
 }
 
 void drawAxis()
@@ -1066,11 +1147,29 @@ void drawCylinderHalf()
 	glPopMatrix();
 }
 
+void drawCylinderAQuater()
+{
+	glPushMatrix();
+	cylinderAQuater.positionY = baseHeight;
+	cylinderAQuater.positionX = rectangular0Length;
+	cylinderAQuater.positionZ = baseWidth;
+	glTranslated(cylinderAQuater.positionX, cylinderAQuater.positionY, cylinderAQuater.positionZ);
+	glRotated(90, 0, 1, 0);
+
+	cylinderAQuater.setupMaterial(COLOR_RED);
+	cylinderAQuater.SetColor(COLOR_RED);
+	cylinderAQuater.CalculateFacesNorm();
+	drawPart_ColorOrWireframe(cylinderAQuater);
+
+	glPopMatrix();
+}
+
 void drawAllObject()
 {
 	drawRectangular0();
 	drawRectangular1();
 	drawCylinderHalf();
+	drawCylinderAQuater();
 }
 
 void switchCameraView()
