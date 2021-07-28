@@ -5,7 +5,7 @@ Author: Nguyễn Trí Nhân
 Bắt buộc cài đặt thwu viện cho Ubuntu, bằng dòng lệnh sau
 
 ```
-sudo apt-get install libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev
+sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
 ```
 
 ## Run
