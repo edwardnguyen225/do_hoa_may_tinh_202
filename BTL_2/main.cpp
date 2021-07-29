@@ -798,11 +798,6 @@ float baseScaleDelta = 0.025;
 float baseWidth = baseMeasure;
 float baseHeight = baseWidth * 0.6;
 
-float basePositionY =  1;
-float basePositionYMax = 5;
-float basePositionYMin = 1;
-float basePositionDelta = 0.1;
-
 float baseRotateY = 90;
 float baseRotateX = 0;
 float baseRotateZ = 0;
@@ -827,6 +822,13 @@ Mesh cylinderAQuater;
 float cylinderAQuaterSegments = 10;
 float cylinderAQuaterHeight = baseHeight;
 float cylinderAQuaterRadius = baseWidth * 2;
+
+float basePositionY = 1;
+float basePositionX = -rectangular0Length;
+float basePositionZ = -rectangular0Width;
+float basePositionYMax = 5;
+float basePositionYMin = 1;
+float basePositionDelta = 0.1;
 
 void createObject()
 {
@@ -877,6 +879,8 @@ void drawRectangular0()
 	glRotatef(baseRotateX, 0, 0, 1);
 	glRotatef(baseRotateZ, 1, 0, 0);
 
+	glTranslated(basePositionX, 0, basePositionZ); // move the center to the end edge of box
+
 	glTranslated(rectangular0.positionX, 0, rectangular0.positionZ);
 
 	rectangular0.setupMaterial(COLOR_RED);
@@ -900,9 +904,8 @@ void drawRectangular1()
 	glRotatef(-baseRotateX, 1, 0, 0);
 	glRotatef(baseRotateZ, 0, 0, 1);
 
-	rectangular1.positionY = basePositionY;
-	rectangular1.positionX = -(rectangular1Length + baseWidth);
-	rectangular1.positionZ = rectangular1Width + rectangular0Length;
+	rectangular1.positionX = -rectangular1Length;
+	rectangular1.positionZ = rectangular1Width;
 	glTranslated(rectangular1.positionX, 0, rectangular1.positionZ);
 
 	rectangular1.setupMaterial(COLOR_RED);
@@ -926,8 +929,10 @@ void drawCylinderHalf()
 	glRotatef(baseRotateX, 1, 0, 0);
 	glRotatef(-baseRotateZ, 0, 0, 1);
 
-	cylinderHalf.positionY = basePositionY;
-	cylinderHalf.positionZ = rectangular0Length;
+	glTranslated(basePositionX, 0, basePositionZ);
+
+	cylinderHalf.positionX = cylinderHalfRadius;
+	cylinderHalf.positionZ = cylinderHalfRadius + rectangular0Length * 2;
 	glTranslated(cylinderHalf.positionX, 0, cylinderHalf.positionZ);
 
 	cylinderHalf.setupMaterial(COLOR_RED);
@@ -951,9 +956,10 @@ void drawCylinderAQuater()
 	glRotatef(-baseRotateX, 1, 0, 0);
 	glRotatef(baseRotateZ, 0, 0, 1);
 
-	cylinderAQuater.positionY = basePositionY;
-	cylinderAQuater.positionZ = rectangular0Length;
-	cylinderAQuater.positionX = -baseWidth;
+	glTranslated(basePositionX, 0, basePositionZ);
+
+	cylinderAQuater.positionX = cylinderAQuaterRadius;
+	cylinderAQuater.positionZ = cylinderAQuaterRadius / 2;
 	glTranslated(cylinderAQuater.positionX, 0, cylinderAQuater.positionZ);
 
 	cylinderAQuater.setupMaterial(COLOR_RED);
@@ -967,9 +973,9 @@ void drawCylinderAQuater()
 void drawAllObject()
 {
 	drawRectangular0();
-	drawRectangular1();
 	drawCylinderHalf();
 	drawCylinderAQuater();
+	drawRectangular1();
 }
 
 void switchCameraView()
