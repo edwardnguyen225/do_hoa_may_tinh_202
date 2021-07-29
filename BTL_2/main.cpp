@@ -1118,14 +1118,12 @@ void myKeyBoard(unsigned char key, int x, int y)
 	case 'i':
 	{
 		baseScale += baseScaleDelta;
-		cout << "BIGGGGGGGGGGGGGGGGGER" << endl;
 		break;
 	}
 	case 'O': // Decrease obj size
 	case 'o':
 	{
 		baseScale -= baseScaleDelta;
-		cout << "smaller" << endl;
 		break;
 	}
 	// TODO: Add rotation around X
