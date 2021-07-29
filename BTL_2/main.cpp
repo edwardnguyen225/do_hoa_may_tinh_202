@@ -869,9 +869,12 @@ void drawPart_ColorOrWireframe(Mesh &part)
 void drawRectangular0()
 {
 	glPushMatrix();
+	glRotatef(baseRotateY, 0, 1, 0);
+	glRotatef(baseRotateX, 0, 0, 1);
+	glRotatef(baseRotateZ, 1, 0, 0);
+
 	rectangular0.positionY = basePositionY;
 	glTranslated(rectangular0.positionX, rectangular0.positionY, rectangular0.positionZ);
-	glRotatef(baseRotateY, 0, 1, 0);
 
 	rectangular0.setupMaterial(COLOR_RED);
 	rectangular0.SetColor(COLOR_RED);
@@ -889,6 +892,8 @@ void drawRectangular1()
 	 */
 	glPushMatrix();
 	glRotated(baseRotateY + 90, 0, 1, 0);
+	glRotatef(-baseRotateX, 1, 0, 0);
+	glRotatef(baseRotateZ, 0, 0, 1);
 
 	rectangular1.positionY = basePositionY;
 	rectangular1.positionX = -(rectangular1Length + baseWidth);
@@ -911,6 +916,8 @@ void drawCylinderHalf()
 	 */
 	glPushMatrix();
 	glRotatef(baseRotateY - 90, 0, 1, 0);
+	glRotatef(baseRotateX, 1, 0, 0);
+	glRotatef(-baseRotateZ, 0, 0, 1);
 
 	cylinderHalf.positionY = basePositionY;
 	cylinderHalf.positionZ = rectangular0Length;
@@ -932,6 +939,8 @@ void drawCylinderAQuater()
 	 */
 	glPushMatrix();
 	glRotated(baseRotateY + 90, 0, 1, 0);
+	glRotatef(-baseRotateX, 1, 0, 0);
+	glRotatef(baseRotateZ, 0, 0, 1);
 
 	cylinderAQuater.positionY = basePositionY;
 	cylinderAQuater.positionZ = rectangular0Length;
@@ -1126,25 +1135,22 @@ void myKeyBoard(unsigned char key, int x, int y)
 		baseScale -= baseScaleDelta;
 		break;
 	}
-	// TODO: Add rotation around X
 	case 'X': // Rotate around the x axis
 	case 'x':
 	{
-		cout << "rotate X" << endl;
+		baseRotateX += baseRotateDelta;
 		break;
 	}
-	// TODO: Add rotation around Y
 	case 'Y': // Rotate around the y axis
 	case 'y':
 	{
 		baseRotateY += baseRotateDelta;
 		break;
 	}
-	// TODO: Add rotation around Z
 	case 'Z': // Rotate around the z axis
 	case 'z':
 	{
-		cout << "rotate Z" << endl;
+		baseRotateZ += baseRotateDelta;
 		break;
 	}
 	case '1': // Toggle draw wire frame mode
