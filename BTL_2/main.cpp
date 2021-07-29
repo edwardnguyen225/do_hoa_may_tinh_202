@@ -20,6 +20,10 @@ using namespace std;
 #define COLOR_PURPLE 12
 #define COLOR_BLACK 13
 
+#define DRAW_WIREFRAME 0
+#define DRAW_COLOR_2D 1
+#define DRAW_COLOR_3D 2
+
 float ColorArr[COLORNUM][3] = {
 		{1.0, 0.0, 0.0},			 // red 0
 		{0.0, 1.0, 0.0},			 // green 1
@@ -48,6 +52,7 @@ float cameraDistance = cameraDistance_init;
 float cameraHeight = cameraHeight_init;
 float cameraAngle = cameraAngle_init;
 
+int drawMode = DRAW_COLOR_3D;
 bool bDrawWireFrame = false;
 bool bLight1on = true;
 
@@ -861,12 +866,24 @@ void drawAxis()
 	glEnd();
 }
 
-void drawPart_ColorOrWireframe(Mesh &part)
+void drawPart(Mesh &part)
 {
-	if (bDrawWireFrame)
+	// if (bDrawWireFrame)
+	// 	part.DrawWireframe();
+	// else
+	// 	part.Draw();
+	switch (drawMode)
+	{
+	case DRAW_WIREFRAME:
 		part.DrawWireframe();
-	else
+		break;
+	case DRAW_COLOR_2D:
+		part.DrawColor();
+		break;
+	case DRAW_COLOR_3D:
+	default:
 		part.Draw();
+	}
 }
 
 void drawRectangular0()
@@ -885,7 +902,7 @@ void drawRectangular0()
 	rectangular0.setupMaterial(COLOR_RED);
 	rectangular0.SetColor(COLOR_RED);
 	rectangular0.CalculateFacesNorm();
-	drawPart_ColorOrWireframe(rectangular0);
+	drawPart(rectangular0);
 
 	glPopMatrix();
 }
@@ -910,7 +927,7 @@ void drawRectangular1()
 	rectangular1.setupMaterial(COLOR_RED);
 	rectangular1.SetColor(COLOR_RED);
 	rectangular1.CalculateFacesNorm();
-	drawPart_ColorOrWireframe(rectangular1);
+	drawPart(rectangular1);
 
 	glPopMatrix();
 }
@@ -937,7 +954,7 @@ void drawCylinderHalf()
 	cylinderHalf.setupMaterial(COLOR_RED);
 	cylinderHalf.SetColor(COLOR_RED);
 	cylinderHalf.CalculateFacesNorm();
-	drawPart_ColorOrWireframe(cylinderHalf);
+	drawPart(cylinderHalf);
 
 	glPopMatrix();
 }
@@ -964,7 +981,7 @@ void drawCylinderAQuater()
 	cylinderAQuater.setupMaterial(COLOR_RED);
 	cylinderAQuater.SetColor(COLOR_RED);
 	cylinderAQuater.CalculateFacesNorm();
-	drawPart_ColorOrWireframe(cylinderAQuater);
+	drawPart(cylinderAQuater);
 
 	glPopMatrix();
 }
@@ -1161,9 +1178,19 @@ void myKeyBoard(unsigned char key, int x, int y)
 		baseRotateZ += baseRotateDelta;
 		break;
 	}
-	case '1': // Toggle draw wire frame mode
+	case '1': // Draw wireframe
 	{
-		bDrawWireFrame = !bDrawWireFrame;
+		drawMode = DRAW_WIREFRAME;
+		break;
+	}
+	case '2': // Draw 2d color
+	{
+		drawMode = DRAW_COLOR_2D;
+		break;
+	}
+	case '3': // Draw 3d color
+	{
+		drawMode = DRAW_COLOR_3D;
 		break;
 	}
 	case '+': // Increase camera distance
