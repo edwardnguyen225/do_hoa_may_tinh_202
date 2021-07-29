@@ -866,6 +866,52 @@ void drawAxis()
 	glEnd();
 }
 
+void drawLucGiac(float x, float y, float z, float R, float alpha)
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glBegin(GL_QUADS);
+	glColor4f(0.3, 1.0, 1.0, alpha);
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(x + R * cos(-60 * M_PI / 180), y, z + R * sin(-60 * M_PI / 180));
+	glVertex3f(x + R * cos(0), y, z + R * sin(0));
+	glVertex3f(x + R * cos(60 * M_PI / 180), y, z + R * sin(60 * M_PI / 180));
+	glVertex3f(x, y, z);
+	glEnd();
+	glBegin(GL_QUADS);
+	glColor4f(77.0 / 255.0, 166.0 / 255.0, 210.0 / 255.0, alpha);
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(x + R * cos(60 * M_PI / 180), y, z + R * sin(60 * M_PI / 180));
+	glVertex3f(x + R * cos(120 * M_PI / 180), y, z + R * sin(120 * M_PI / 180));
+	glVertex3f(x + R * cos(180 * M_PI / 180), y, z + R * sin(180 * M_PI / 180));
+	glVertex3f(x, y, z);
+	glEnd();
+	glBegin(GL_QUADS);
+	glColor4f(1.0, 1.0, 1.0, alpha);
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	glVertex3f(x + R * cos(180 * M_PI / 180), y, z + R * sin(180 * M_PI / 180));
+	glVertex3f(x + R * cos(240 * M_PI / 180), y, z + R * sin(240 * M_PI / 180));
+	glVertex3f(x + R * cos(300 * M_PI / 180), y, z + R * sin(300 * M_PI / 180));
+	glVertex3f(x, y, z);
+	glEnd();
+}
+
+void drawNen(float alpha)
+{
+	float y = 0;
+	glDisable(GL_LIGHTING);
+	glColor3f(1.0f, 1.0f, 1.0f);
+	float d = 0.7, R = d / cos(M_PI / 6);
+	int i = 0;
+	for (float x = -30; x < 30; x += R + R * cos(M_PI / 3))
+	{
+		float z = (i % 2 == 0) ? -20 : (-20 - d);
+		for (; z < 20; z += 2 * d)
+			drawLucGiac(x, y, z, R, alpha);
+		i++;
+	}
+	glEnable(GL_LIGHTING);
+}
+
 void drawPart(Mesh &part)
 {
 	// if (bDrawWireFrame)
@@ -1048,10 +1094,41 @@ void displayMe(void)
 	glViewport(0, 0, screenWidth, screenHeight);
 	drawAxis();
 
+	// Clear the stencil buffers
+	glClearStencil(0);
+	// Clear depth
+	glClearDepth(1.0f);
+
 	glPushMatrix();
-	glScalef(baseScale, baseScale, baseScale);
+	glScalef(baseScale, baseScale, baseScale); // Scaling object up and down
 	drawAllObject();
 	glPopMatrix();
+
+	// Draw nen & disable update on depth
+	glDisable(GL_DEPTH_TEST);
+	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	glEnable(GL_STENCIL_TEST);
+	glStencilFunc(GL_ALWAYS, 1, 1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	drawNen(1.0f);
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	glEnable(GL_DEPTH_TEST);
+
+	/* Now, only render where stencil is set to 1. */
+	glStencilFunc(GL_EQUAL, 1, 1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+	// Draw reflection
+	glPushMatrix();
+	glScalef(baseScale, -baseScale, baseScale);
+	drawAllObject();
+	glPopMatrix();
+	glDisable(GL_STENCIL_TEST);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	drawNen(0.7f);
+	glDisable(GL_BLEND);
 
 	glFlush();
 	glutSwapBuffers();
