@@ -803,7 +803,7 @@ float basePositionYMax = 5;
 float basePositionYMin = 1;
 float basePositionDelta = 0.1;
 
-float baseRotateY = 0;
+float baseRotateY = 90;
 float baseRotateX = 0;
 float baseRotateZ = 0;
 float baseRotateDelta = 5;
