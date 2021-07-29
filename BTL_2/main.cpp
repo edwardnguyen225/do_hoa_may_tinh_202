@@ -790,7 +790,8 @@ public:
 #pragma endregion
 
 float baseMeasure = 0.5;
-float baseMeasureDelta = 0.025;
+float baseScale = 1;
+float baseScaleDelta = 0.025;
 
 float baseWidth = baseMeasure;
 float baseHeight = baseWidth * 0.6;
@@ -890,7 +891,7 @@ void drawRectangular1()
 	glRotated(baseRotateY + 90, 0, 1, 0);
 
 	rectangular1.positionY = basePositionY;
-	rectangular1.positionX = - (rectangular1Length + baseWidth);
+	rectangular1.positionX = -(rectangular1Length + baseWidth);
 	rectangular1.positionZ = rectangular1Width + rectangular0Length;
 	glTranslated(rectangular1.positionX, rectangular1.positionY, rectangular1.positionZ);
 
@@ -1026,8 +1027,10 @@ void displayMe(void)
 		gluLookAt(camera_x, camera_y, camera_z, lookAtX, lookAtY, lookAtZ, 0, 1, 0);
 	}
 	glViewport(0, 0, screenWidth, screenHeight);
-	drawAllObject();
 	drawAxis();
+
+	glScalef(baseScale, baseScale, baseScale);
+	drawAllObject();
 
 	glFlush();
 	glutSwapBuffers();
@@ -1111,23 +1114,17 @@ void myKeyBoard(unsigned char key, int x, int y)
 		basePositionY -= basePositionDelta;
 		break;
 	}
-	// TODO: need fixing
 	case 'I': // Increase obj size
 	case 'i':
 	{
-		baseMeasure += baseMeasureDelta;
-		createObject();
-		drawAllObject();
+		baseScale += baseScaleDelta;
 		cout << "BIGGGGGGGGGGGGGGGGGER" << endl;
 		break;
 	}
-	// TODO: need fixing
 	case 'O': // Decrease obj size
 	case 'o':
 	{
-		baseMeasure -= baseMeasureDelta;
-		createObject();
-		drawAllObject();
+		baseScale -= baseScaleDelta;
 		cout << "smaller" << endl;
 		break;
 	}
