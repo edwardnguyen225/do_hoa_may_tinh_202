@@ -52,6 +52,8 @@ float cameraDistance = cameraDistance_init;
 float cameraHeight = cameraHeight_init;
 float cameraAngle = cameraAngle_init;
 
+float gachOpacity = 0.6;
+
 int drawMode = DRAW_COLOR_3D;
 bool bDrawWireFrame = false;
 bool bLight1on = true;
@@ -866,32 +868,18 @@ void drawAxis()
 	glEnd();
 }
 
-void drawLucGiac(float x, float y, float z, float R, float alpha)
+void drawGach(float x, float y, float z, float width, float alpha)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glBegin(GL_QUADS);
-	glColor4f(0.3, 1.0, 1.0, alpha);
+	float r = 211, g = 211, b = 209;
+	glColor4f(r / 255, g / 255, b / 255, alpha);
 	glNormal3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(x + R * cos(-60 * M_PI / 180), y, z + R * sin(-60 * M_PI / 180));
-	glVertex3f(x + R * cos(0), y, z + R * sin(0));
-	glVertex3f(x + R * cos(60 * M_PI / 180), y, z + R * sin(60 * M_PI / 180));
-	glVertex3f(x, y, z);
-	glEnd();
-	glBegin(GL_QUADS);
-	glColor4f(77.0 / 255.0, 166.0 / 255.0, 210.0 / 255.0, alpha);
-	glNormal3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(x + R * cos(60 * M_PI / 180), y, z + R * sin(60 * M_PI / 180));
-	glVertex3f(x + R * cos(120 * M_PI / 180), y, z + R * sin(120 * M_PI / 180));
-	glVertex3f(x + R * cos(180 * M_PI / 180), y, z + R * sin(180 * M_PI / 180));
-	glVertex3f(x, y, z);
-	glEnd();
-	glBegin(GL_QUADS);
-	glColor4f(1.0, 1.0, 1.0, alpha);
-	glNormal3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(x + R * cos(180 * M_PI / 180), y, z + R * sin(180 * M_PI / 180));
-	glVertex3f(x + R * cos(240 * M_PI / 180), y, z + R * sin(240 * M_PI / 180));
-	glVertex3f(x + R * cos(300 * M_PI / 180), y, z + R * sin(300 * M_PI / 180));
-	glVertex3f(x, y, z);
+	width = (width / 2) * 0.97;
+	glVertex3f(x + width, y, z - width);
+	glVertex3f(x + width, y, z + width);
+	glVertex3f(x - width, y, z + width);
+	glVertex3f(x - width, y, z - width);
 	glEnd();
 }
 
@@ -900,13 +888,13 @@ void drawNen(float alpha)
 	float y = 0;
 	glDisable(GL_LIGHTING);
 	glColor3f(1.0f, 1.0f, 1.0f);
-	float d = 0.7, R = d / cos(M_PI / 6);
+	int horizontalLimit = 20;
+	float width = 1;
 	int i = 0;
-	for (float x = -30; x < 30; x += R + R * cos(M_PI / 3))
+	for (float x = -horizontalLimit; x < horizontalLimit; x += width)
 	{
-		float z = (i % 2 == 0) ? -20 : (-20 - d);
-		for (; z < 20; z += 2 * d)
-			drawLucGiac(x, y, z, R, alpha);
+		for (float z = -horizontalLimit; z < horizontalLimit; z += width)
+			drawGach(x, y, z, width, alpha);
 		i++;
 	}
 	glEnable(GL_LIGHTING);
@@ -1092,7 +1080,7 @@ void displayMe(void)
 		gluLookAt(camera_x, camera_y, camera_z, lookAtX, lookAtY, lookAtZ, 0, 1, 0);
 	}
 	glViewport(0, 0, screenWidth, screenHeight);
-	drawAxis();
+	// drawAxis();
 
 	// Clear the stencil buffers
 	glClearStencil(0);
@@ -1127,7 +1115,7 @@ void displayMe(void)
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	drawNen(0.7f);
+	drawNen(gachOpacity);
 	glDisable(GL_BLEND);
 
 	glFlush();
