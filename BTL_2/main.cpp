@@ -42,13 +42,12 @@ int screenWidth = 1024;
 int screenHeight = screenWidth / screenRatio;
 float lookAtX, lookAtY, lookAtZ;
 float cameraDistance_init = 10;
-float cameraHeight_init = 3.5;
+float cameraHeight_init = 5;
 float cameraAngle_init = -35;
 float cameraDistance = cameraDistance_init;
 float cameraHeight = cameraHeight_init;
 float cameraAngle = cameraAngle_init;
 
-bool bLockCamera = false;
 bool bDrawWireFrame = false;
 bool bLight1on = true;
 
@@ -823,7 +822,7 @@ float cylinderAQuaterSegments = 10;
 float cylinderAQuaterHeight = baseHeight;
 float cylinderAQuaterRadius = baseWidth * 2;
 
-float basePositionY = 1;
+float basePositionY = 2;
 float basePositionX = -rectangular0Length;
 float basePositionZ = -rectangular0Width;
 float basePositionYMax = 5;
@@ -980,35 +979,14 @@ void drawAllObject()
 
 void switchCameraView()
 {
-	if (bLockCamera)
-	{
-		cameraDistance_init = cameraDistance;
-		cameraHeight_init = cameraHeight;
-		cameraAngle_init = cameraAngle;
-
-		cameraDistance = 0;
-		cameraHeight = 20;
-		cameraAngle = 180;
-		float fHalfSizeHorizontal = 10.0f;
-		float fHalfSizeVertical = fHalfSizeHorizontal / screenRatio;
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(-fHalfSizeHorizontal, fHalfSizeHorizontal, -fHalfSizeVertical, fHalfSizeVertical, -1000, 1000);
-
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-	}
-	else
-	{
-		cameraDistance = cameraDistance_init;
-		cameraHeight = cameraHeight_init;
-		cameraAngle = cameraAngle_init;
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glFrustum(-screenRatio, screenRatio, -1.0, 1.0, 1.5, 50.0);
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-	}
+	cameraDistance = cameraDistance_init;
+	cameraHeight = cameraHeight_init;
+	cameraAngle = cameraAngle_init;
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glFrustum(-screenRatio, screenRatio, -1.0, 1.0, 1.5, 50.0);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 }
 
 void switchSecondLight()
@@ -1101,9 +1079,6 @@ void myInit()
 
 void mySpecialKeyBoard(int key, int x, int y)
 {
-	if (bLockCamera)
-		return;
-
 	switch (key)
 	{
 	case GLUT_KEY_UP:
@@ -1192,13 +1167,9 @@ void myKeyBoard(unsigned char key, int x, int y)
 		break;
 	}
 	case '+': // Increase camera distance
-		if (bLockCamera)
-			break;
 		cameraDistance += 0.25;
 		break;
 	case '-': // Decrease camera distance
-		if (bLockCamera)
-			break;
 		cameraDistance -= 0.25;
 		break;
 	default:
