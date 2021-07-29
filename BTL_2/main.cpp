@@ -798,9 +798,9 @@ float baseScaleDelta = 0.025;
 float baseWidth = baseMeasure;
 float baseHeight = baseWidth * 0.6;
 
-float basePositionX = 0;
-float basePositionZ = 0;
-float basePositionY = baseHeight;
+float basePositionY =  1;
+float basePositionYMax = 5;
+float basePositionYMin = 1;
 float basePositionDelta = 0.1;
 
 float baseRotateY = 0;
@@ -871,12 +871,13 @@ void drawPart_ColorOrWireframe(Mesh &part)
 void drawRectangular0()
 {
 	glPushMatrix();
+	glTranslated(0, basePositionY, 0);
+
 	glRotatef(baseRotateY, 0, 1, 0);
 	glRotatef(baseRotateX, 0, 0, 1);
 	glRotatef(baseRotateZ, 1, 0, 0);
 
-	rectangular0.positionY = basePositionY;
-	glTranslated(rectangular0.positionX, rectangular0.positionY, rectangular0.positionZ);
+	glTranslated(rectangular0.positionX, 0, rectangular0.positionZ);
 
 	rectangular0.setupMaterial(COLOR_RED);
 	rectangular0.SetColor(COLOR_RED);
@@ -893,6 +894,8 @@ void drawRectangular1()
 	=> rotate it before changing the coordinate
 	 */
 	glPushMatrix();
+	glTranslated(0, basePositionY, 0);
+
 	glRotated(baseRotateY + 90, 0, 1, 0);
 	glRotatef(-baseRotateX, 1, 0, 0);
 	glRotatef(baseRotateZ, 0, 0, 1);
@@ -900,7 +903,7 @@ void drawRectangular1()
 	rectangular1.positionY = basePositionY;
 	rectangular1.positionX = -(rectangular1Length + baseWidth);
 	rectangular1.positionZ = rectangular1Width + rectangular0Length;
-	glTranslated(rectangular1.positionX, rectangular1.positionY, rectangular1.positionZ);
+	glTranslated(rectangular1.positionX, 0, rectangular1.positionZ);
 
 	rectangular1.setupMaterial(COLOR_RED);
 	rectangular1.SetColor(COLOR_RED);
@@ -917,13 +920,15 @@ void drawCylinderHalf()
 	=> rotate it before changing the coordinate
 	 */
 	glPushMatrix();
+	glTranslated(0, basePositionY, 0);
+
 	glRotatef(baseRotateY - 90, 0, 1, 0);
 	glRotatef(baseRotateX, 1, 0, 0);
 	glRotatef(-baseRotateZ, 0, 0, 1);
 
 	cylinderHalf.positionY = basePositionY;
 	cylinderHalf.positionZ = rectangular0Length;
-	glTranslated(cylinderHalf.positionX, cylinderHalf.positionY, cylinderHalf.positionZ);
+	glTranslated(cylinderHalf.positionX, 0, cylinderHalf.positionZ);
 
 	cylinderHalf.setupMaterial(COLOR_RED);
 	cylinderHalf.SetColor(COLOR_RED);
@@ -940,6 +945,8 @@ void drawCylinderAQuater()
 	=> rotate it before changing the coordinate
 	 */
 	glPushMatrix();
+	glTranslated(0, basePositionY, 0);
+
 	glRotated(baseRotateY + 90, 0, 1, 0);
 	glRotatef(-baseRotateX, 1, 0, 0);
 	glRotatef(baseRotateZ, 0, 0, 1);
@@ -947,7 +954,7 @@ void drawCylinderAQuater()
 	cylinderAQuater.positionY = basePositionY;
 	cylinderAQuater.positionZ = rectangular0Length;
 	cylinderAQuater.positionX = -baseWidth;
-	glTranslated(cylinderAQuater.positionX, cylinderAQuater.positionY, cylinderAQuater.positionZ);
+	glTranslated(cylinderAQuater.positionX, 0, cylinderAQuater.positionZ);
 
 	cylinderAQuater.setupMaterial(COLOR_RED);
 	cylinderAQuater.SetColor(COLOR_RED);
@@ -1118,19 +1125,26 @@ void myKeyBoard(unsigned char key, int x, int y)
 	case 'U': // Move obj up
 	case 'u':
 	{
+		if (basePositionY + basePositionDelta > basePositionYMax)
+		{
+			break;
+		}
 		basePositionY += basePositionDelta;
 		break;
 	}
 	case 'D': // Move obj down
 	case 'd':
 	{
+		if (basePositionY - basePositionDelta < basePositionYMin)
+		{
+			break;
+		}
 		basePositionY -= basePositionDelta;
 		break;
 	}
 	case 'I': // Increase obj size
 	case 'i':
 	{
-		cout << baseScale << endl;
 		if (baseScale + baseScaleDelta > baseScaleMax)
 		{
 			break;
@@ -1141,7 +1155,6 @@ void myKeyBoard(unsigned char key, int x, int y)
 	case 'O': // Decrease obj size
 	case 'o':
 	{
-		cout << baseScale << endl;
 		if (baseScale - baseScaleDelta < baseScaleMin)
 		{
 			break;
