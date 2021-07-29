@@ -789,7 +789,7 @@ public:
 
 #pragma endregion
 
-float baseMeasure = 1;
+float baseMeasure = 0.5;
 float baseMeasureDelta = 0.025;
 
 float baseWidth = baseMeasure;
@@ -799,6 +799,11 @@ float basePositionX = 0;
 float basePositionZ = 0;
 float basePositionY = baseHeight;
 float basePositionDelta = 0.1;
+
+float baseRotateY = 0;
+float baseRotateX = 0;
+float baseRotateZ = 0;
+float baseRotateDelta = 5;
 
 Mesh rectangular0;
 float rectangular0Width = baseWidth;
@@ -865,6 +870,7 @@ void drawRectangular0()
 	glPushMatrix();
 	rectangular0.positionY = basePositionY;
 	glTranslated(rectangular0.positionX, rectangular0.positionY, rectangular0.positionZ);
+	glRotatef(baseRotateY, 0, 1, 0);
 
 	rectangular0.setupMaterial(COLOR_RED);
 	rectangular0.SetColor(COLOR_RED);
@@ -876,12 +882,17 @@ void drawRectangular0()
 
 void drawRectangular1()
 {
+	/* 
+	Its always rotate around its center
+	=> rotate it before changing the coordinate
+	 */
 	glPushMatrix();
+	glRotated(baseRotateY + 90, 0, 1, 0);
+
 	rectangular1.positionY = basePositionY;
-	rectangular1.positionX = rectangular0Length + baseWidth;
-	rectangular1.positionZ = baseWidth * 2 + (rectangular1Length - baseWidth);
+	rectangular1.positionX = - (rectangular1Length + baseWidth);
+	rectangular1.positionZ = rectangular1Width + rectangular0Length;
 	glTranslated(rectangular1.positionX, rectangular1.positionY, rectangular1.positionZ);
-	glRotated(90, 0, 1, 0);
 
 	rectangular1.setupMaterial(COLOR_RED);
 	rectangular1.SetColor(COLOR_RED);
@@ -893,11 +904,16 @@ void drawRectangular1()
 
 void drawCylinderHalf()
 {
+	/* 
+	Its always rotate around its center
+	=> rotate it before changing the coordinate
+	 */
 	glPushMatrix();
+	glRotatef(baseRotateY - 90, 0, 1, 0);
+
 	cylinderHalf.positionY = basePositionY;
-	cylinderHalf.positionX = -rectangular0Length;
+	cylinderHalf.positionZ = rectangular0Length;
 	glTranslated(cylinderHalf.positionX, cylinderHalf.positionY, cylinderHalf.positionZ);
-	glRotated(-90, 0, 1, 0);
 
 	cylinderHalf.setupMaterial(COLOR_RED);
 	cylinderHalf.SetColor(COLOR_RED);
@@ -909,12 +925,17 @@ void drawCylinderHalf()
 
 void drawCylinderAQuater()
 {
+	/* 
+	Its always rotate around its center
+	=> rotate it before changing the coordinate
+	 */
 	glPushMatrix();
+	glRotated(baseRotateY + 90, 0, 1, 0);
+
 	cylinderAQuater.positionY = basePositionY;
-	cylinderAQuater.positionX = rectangular0Length;
-	cylinderAQuater.positionZ = baseWidth;
+	cylinderAQuater.positionZ = rectangular0Length;
+	cylinderAQuater.positionX = -baseWidth;
 	glTranslated(cylinderAQuater.positionX, cylinderAQuater.positionY, cylinderAQuater.positionZ);
-	glRotated(90, 0, 1, 0);
 
 	cylinderAQuater.setupMaterial(COLOR_RED);
 	cylinderAQuater.SetColor(COLOR_RED);
@@ -1121,7 +1142,7 @@ void myKeyBoard(unsigned char key, int x, int y)
 	case 'Y': // Rotate around the y axis
 	case 'y':
 	{
-		cout << "rotate Y" << endl;
+		baseRotateY += baseRotateDelta;
 		break;
 	}
 	// TODO: Add rotation around Z
