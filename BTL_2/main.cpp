@@ -791,6 +791,8 @@ public:
 
 float baseMeasure = 0.5;
 float baseScale = 1;
+float baseScaleMin = 0.75;
+float baseScaleMax = 2.5;
 float baseScaleDelta = 0.025;
 
 float baseWidth = baseMeasure;
@@ -1038,8 +1040,10 @@ void displayMe(void)
 	glViewport(0, 0, screenWidth, screenHeight);
 	drawAxis();
 
+	glPushMatrix();
 	glScalef(baseScale, baseScale, baseScale);
 	drawAllObject();
+	glPopMatrix();
 
 	glFlush();
 	glutSwapBuffers();
@@ -1126,12 +1130,22 @@ void myKeyBoard(unsigned char key, int x, int y)
 	case 'I': // Increase obj size
 	case 'i':
 	{
+		cout << baseScale << endl;
+		if (baseScale + baseScaleDelta > baseScaleMax)
+		{
+			break;
+		}
 		baseScale += baseScaleDelta;
 		break;
 	}
 	case 'O': // Decrease obj size
 	case 'o':
 	{
+		cout << baseScale << endl;
+		if (baseScale - baseScaleDelta < baseScaleMin)
+		{
+			break;
+		}
 		baseScale -= baseScaleDelta;
 		break;
 	}
