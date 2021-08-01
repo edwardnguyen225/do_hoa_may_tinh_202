@@ -1272,7 +1272,22 @@ void myKeyBoard(unsigned char key, int x, int y)
 
 void printUsage()
 {
-	cout << "1   : Xoay ban quay nguoc chieu kim dong ho" << endl;
+	cout << "1	: Che do hien thi khung day" << endl;
+	cout << "2	: Che do hien thi to mau 2D" << endl;
+	cout << "3	: Che do hien thi to mau 3D" << endl;
+	cout << "U, u	: Di chuyen len tren" << endl;
+	cout << "D, d	: di CHuyen xuong duoi" << endl;
+	cout << "I, i	: Phong to" << endl;
+	cout << "O, o	: Thu nho" << endl;
+	cout << "X, x	: Xoay quanh truc X" << endl;
+	cout << "Y, y	: Xoay quanh truc Y" << endl;
+	cout << "Z, z	: Xoay quanh truc Z" << endl;
+	cout << "+	: Tang khoang cach camera" << endl;
+	cout << "-	: Giam khoang cach camera" << endl;
+	cout << "up arrow	: Tang chieu cao camera" << endl;
+	cout << "down arrow	: Giam chieu cao camera" << endl;
+	cout << "<-	: Quay camera theo chieu kim dong ho" << endl;
+	cout << "->	: Quay camera nguoc chieu kim dong ho" << endl;
 }
 
 int main(int argc, char **argv)
