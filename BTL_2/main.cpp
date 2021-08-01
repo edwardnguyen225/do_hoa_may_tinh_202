@@ -1248,7 +1248,7 @@ void myKeyBoard(unsigned char key, int x, int y)
 		drawMode = DRAW_WIREFRAME;
 		break;
 	}
-	case '2': // Draw 2d color
+	case '2': // TODO: Draw 2d color
 	{
 		drawMode = DRAW_COLOR_2D;
 		break;
