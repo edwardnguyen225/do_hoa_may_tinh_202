@@ -925,6 +925,7 @@ void drawRectangular0()
 	glPushMatrix();
 	glTranslated(0, basePositionY, 0);
 
+	// printf("Rotation rec0: %f, %f, %f\n", baseRotateY, baseRotateX, baseRotateZ);
 	glRotatef(baseRotateY, 0, 1, 0);
 	glRotatef(baseRotateX, 0, 0, 1);
 	glRotatef(baseRotateZ, 1, 0, 0);
@@ -1229,18 +1230,27 @@ void myKeyBoard(unsigned char key, int x, int y)
 	case 'x':
 	{
 		baseRotateX += baseRotateDelta;
+		if (baseRotateX == 360) {
+			baseRotateX = 0;
+		}
 		break;
 	}
 	case 'Y': // Rotate around the y axis
 	case 'y':
 	{
 		baseRotateY += baseRotateDelta;
+		if (baseRotateY == 360) {
+			baseRotateY = 0;
+		}
 		break;
 	}
 	case 'Z': // Rotate around the z axis
 	case 'z':
 	{
 		baseRotateZ += baseRotateDelta;
+		if (baseRotateZ == 360) {
+			baseRotateZ = 0;
+		}
 		break;
 	}
 	case '1': // Draw wireframe
@@ -1300,10 +1310,10 @@ int main(int argc, char **argv)
 	glutInitWindowPosition(800, 100);													// set window position on screen
 	glutCreateWindow("Nguyen Tri Nhan - 1810390");
 
-	createObject();
-	myInit();
 	glutSpecialFunc(mySpecialKeyBoard);
 	glutKeyboardFunc(myKeyBoard);
+	createObject();
+	myInit();
 	glutDisplayFunc(displayMe);
 
 	glutMainLoop();
