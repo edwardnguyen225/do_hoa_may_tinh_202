@@ -1,12 +1,18 @@
+// ===========================================================================
+// ||					Bai tap lon Do Hoa May Tinh							||
+// ||					Ten: 	Nguyen Tri Nhan								||
+// ||					MSSV:	1810390										||
+// ===========================================================================
+
 #include <math.h>
 #include <iostream>
-// #include <windows.h>
+#include <windows.h>
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <cmath>
 
 using namespace std;
-// #define M_PI 3.141592653589793238462643383279502884
+#define M_PI 3.141592653589793238462643383279502884
 
 #define COLORNUM 15
 #define COLOR_RED 0
@@ -944,7 +950,7 @@ void drawRectangular0()
 
 void drawRectangular1()
 {
-	/* 
+	/*
 	Its always rotate around its center
 	=> rotate it before changing the coordinate
 	 */
@@ -969,7 +975,7 @@ void drawRectangular1()
 
 void drawCylinderHalf()
 {
-	/* 
+	/*
 	Its always rotate around its center
 	=> rotate it before changing the coordinate
 	 */
@@ -996,7 +1002,7 @@ void drawCylinderHalf()
 
 void drawCylinderAQuater()
 {
-	/* 
+	/*
 	Its always rotate around its center
 	=> rotate it before changing the coordinate
 	 */
