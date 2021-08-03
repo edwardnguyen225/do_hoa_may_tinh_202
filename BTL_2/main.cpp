@@ -826,12 +826,12 @@ float rectangular1Length = rectangular1Width * 1.3;
 float rectangular1Height = baseHeight;
 
 Mesh cylinderHalf;
-float cylinderHalfSegments = 9;
+float cylinderHalfSegments = 32;
 float cylinderHalfHeight = baseHeight;
 float cylinderHalfRadius = baseWidth;
 
 Mesh cylinderAQuater;
-float cylinderAQuaterSegments = 10;
+float cylinderAQuaterSegments = 32;
 float cylinderAQuaterHeight = baseHeight;
 float cylinderAQuaterRadius = baseWidth * 2;
 
@@ -908,17 +908,15 @@ void drawNen(float alpha)
 
 void drawPart(Mesh &part)
 {
-	// if (bDrawWireFrame)
-	// 	part.DrawWireframe();
-	// else
-	// 	part.Draw();
 	switch (drawMode)
 	{
 	case DRAW_WIREFRAME:
 		part.DrawWireframe();
 		break;
 	case DRAW_COLOR_2D:
-		part.DrawColor();
+	  glDisable(GL_LIGHTING);
+    part.DrawColor();
+    glEnable(GL_LIGHTING);
 		break;
 	case DRAW_COLOR_3D:
 	default:
