@@ -1112,8 +1112,8 @@ public:
 
 float baseMeasure = 0.5;
 float baseScale = 1;
-float baseScaleMin = 0.75;
-float baseScaleMax = 2.5;
+float baseScaleMin = 0.5;
+float baseScaleMax = 2.25;
 float baseScaleDelta = 0.025;
 
 float baseWidth = baseMeasure;
