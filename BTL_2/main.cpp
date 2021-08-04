@@ -1158,13 +1158,6 @@ int bloodyObjNSegments = 32;
 void createObject()
 {
 	bloodyObj.CreateBloodyObj(bloodyObjRadius, bloodyObjNSegments);
-	// 	rectangular0.CreateRectangular(rectangular0Length, rectangular0Height, rectangular0Width);
-	//
-	// 	rectangular1.CreateRectangular(rectangular1Length, rectangular1Height, rectangular1Width);
-	//
-	// 	cylinderHalf.CreateCylinderHalf(cylinderHalfSegments, cylinderHalfHeight, cylinderHalfRadius);
-	//
-	// 	cylinderAQuater.CreateCylinderAQuater(cylinderAQuaterSegments, cylinderAQuaterHeight, cylinderAQuaterRadius);
 }
 
 void drawAxis()
@@ -1360,10 +1353,6 @@ void drawBloodyObj()
 void drawAllObject()
 {
 	drawBloodyObj();
-	// drawRectangular0();
-	// drawCylinderHalf();
-	// drawCylinderAQuater();
-	// drawRectangular1();
 }
 
 void switchCameraView()
