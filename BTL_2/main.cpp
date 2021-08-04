@@ -789,6 +789,285 @@ public:
 		face[idx].vert[3].vertIndex = nSegment + 1;
 	}
 
+	void CreateBloodyObj(float fRadius, int nSegment)
+	{
+		float fLength_RecSmall = 1.3 * 2 * fRadius;
+		float fLength_RecBig = 2 * 2 * fRadius;
+		float fHeight = 0.6 * fRadius;
+		float fWidth = 2 * fRadius;
+		int i;
+		numVerts = 8 + 1 + (nSegment + 1) * 4 + 1 + 6;
+
+		pt = new Point3[numVerts];
+		pt[0].set(0, fHeight, 0);
+		pt[1].set(-fWidth, fHeight, 0);
+		pt[2].set(-fWidth, fHeight, fLength_RecBig);
+		pt[3].set(0, fHeight, fLength_RecBig);
+		pt[4].set(0, -fHeight, 0);
+		pt[5].set(-fWidth, -fHeight, 0);
+		pt[6].set(-fWidth, -fHeight, fLength_RecBig);
+		pt[7].set(0, -fHeight, fLength_RecBig);
+
+		i = 8;
+		pt[i++].set(-fRadius, fHeight, fLength_RecBig);
+		float fAngle = M_PI / nSegment;
+		// [9 ; 9 + nSegment]
+		for (int j = 0; j <= nSegment; j++)
+		{
+			float x = fRadius * cos(fAngle * j) - fRadius;
+			float y = fHeight;
+			float z = fRadius * sin(fAngle * j) + fLength_RecBig;
+
+			pt[i++].set(x, y, z);
+		}
+
+		//[10 + nSegment; 10 + 2*nSegment ]
+		for (int j = 0; j <= nSegment; j++)
+		{
+			float x = fRadius * cos(fAngle * j) - fRadius;
+			float y = -fHeight;
+			float z = fRadius * sin(fAngle * j) + fLength_RecBig;
+
+			pt[i++].set(x, y, z);
+		}
+
+		pt[i++].set(-fRadius, -fHeight, fLength_RecBig); // 2*nSegment + 11
+
+		fAngle = M_PI / (2 * nSegment);
+		// [12 + 2*nSegment; 12 + 3*nSegment]
+		for (int j = 0; j <= nSegment; j++)
+		{
+			float x = -fWidth * sin(fAngle * j);
+			float y = fHeight;
+			float z = -fWidth * cos(fAngle * j);
+
+			pt[i++].set(x, y, z);
+		}
+
+		// [13 + 3*nSegment ; 13 + 4*nSegment]
+		for (int j = 0; j <= nSegment; j++)
+		{
+			float x = -fWidth * sin(fAngle * j);
+			float y = -fHeight;
+			float z = -fWidth * cos(fAngle * j);
+
+			pt[i++].set(x, y, z);
+		}
+
+		// 14 + 4*nSegment
+		pt[i++].set(0, fHeight, -fWidth);
+		// 15 + 4*nSegment
+		pt[i++].set(fLength_RecSmall, fHeight, -fWidth);
+		// 16 + 4*nSegment
+		pt[i++].set(fLength_RecSmall, fHeight, 0);
+
+		// 17 + 4*nSegment
+		pt[i++].set(0, -fHeight, -fWidth);
+		// 18 + 4*nSegment
+		pt[i++].set(fLength_RecSmall, -fHeight, -fWidth);
+		// 19 + 4*nSegment
+		pt[i++].set(fLength_RecSmall, -fHeight, 0);
+
+		numFaces = 4 + 6 * nSegment + 5;
+		face = new Face[numFaces];
+		// int color = 0;
+		int colorTop = COLOR_BLUE;
+		int colorSide = COLOR_GREEN;
+		int colorBottom = COLOR_RED;
+		i = 0;
+
+		/* ========== Rec Big - top face ========== */
+		face[0].nVerts = 4;
+		face[0].vert = new VertexID[face[0].nVerts];
+		face[0].vert[0].vertIndex = 0;
+		face[0].vert[1].vertIndex = 1;
+		face[0].vert[2].vertIndex = 2;
+		face[0].vert[3].vertIndex = 3;
+		for (int k = 0; k < face[0].nVerts; k++)
+			face[0].vert[k].colorIndex = colorTop;
+
+		i++;
+
+		face[1].nVerts = 4;
+		face[1].vert = new VertexID[face[0].nVerts];
+		face[1].vert[0].vertIndex = 1;
+		face[1].vert[1].vertIndex = 2;
+		face[1].vert[2].vertIndex = 6;
+		face[1].vert[3].vertIndex = 5;
+		for (int k = 0; k < face[1].nVerts; k++)
+			face[1].vert[k].colorIndex = colorSide;
+
+		i++;
+
+		face[2].nVerts = 4;
+		face[2].vert = new VertexID[face[0].nVerts];
+		face[2].vert[0].vertIndex = 3;
+		face[2].vert[1].vertIndex = 0;
+		face[2].vert[2].vertIndex = 4;
+		face[2].vert[3].vertIndex = 7;
+		for (int k = 0; k < face[2].nVerts; k++)
+			face[2].vert[k].colorIndex = colorSide;
+
+		i++;
+
+		face[3].nVerts = 4;
+		face[3].vert = new VertexID[face[0].nVerts];
+		face[3].vert[0].vertIndex = 6;
+		face[3].vert[1].vertIndex = 5;
+		face[3].vert[2].vertIndex = 4;
+		face[3].vert[3].vertIndex = 7;
+		for (int k = 0; k < face[3].nVerts; k++)
+			face[3].vert[k].colorIndex = colorBottom;
+
+		i++;
+
+		for (int j = 0; j < nSegment; j++)
+		{
+			face[i].nVerts = 3;
+			face[i].vert = new VertexID[face[i].nVerts];
+			face[i].vert[0].vertIndex = 8;
+			face[i].vert[1].vertIndex = 8 + j + 1;
+			face[i].vert[2].vertIndex = 8 + j + 2;
+
+			for (int k = 0; k < face[i].nVerts; k++)
+				face[i].vert[k].colorIndex = colorTop;
+
+			i++;
+		}
+
+		for (int j = 0; j < nSegment; j++)
+		{
+			face[i].nVerts = 4;
+			face[i].vert = new VertexID[face[i].nVerts];
+			face[i].vert[0].vertIndex = 8 + j + 1;
+			face[i].vert[1].vertIndex = 8 + j + 2;
+			face[i].vert[2].vertIndex = 8 + j + 2 + nSegment + 1;
+			face[i].vert[3].vertIndex = 8 + j + 1 + nSegment + 1;
+
+			for (int k = 0; k < face[i].nVerts; k++)
+				face[i].vert[k].colorIndex = colorSide;
+
+			i++;
+		}
+
+		for (int j = 0; j < nSegment; j++)
+		{
+			face[i].nVerts = 3;
+			face[i].vert = new VertexID[face[i].nVerts];
+			face[i].vert[0].vertIndex = 2 * nSegment + 11;
+			face[i].vert[1].vertIndex = 10 + nSegment + j;
+			face[i].vert[2].vertIndex = 10 + nSegment + 1 + j;
+
+			for (int k = 0; k < face[i].nVerts; k++)
+				face[i].vert[k].colorIndex = colorBottom;
+
+			i++;
+		}
+
+		for (int j = 0; j < nSegment; j++)
+		{
+			face[i].nVerts = 3;
+			face[i].vert = new VertexID[face[i].nVerts];
+			face[i].vert[0].vertIndex = 0;
+			face[i].vert[1].vertIndex = 12 + 2 * nSegment + j;
+			face[i].vert[2].vertIndex = 12 + 2 * nSegment + j + 1;
+
+			for (int k = 0; k < face[i].nVerts; k++)
+				face[i].vert[k].colorIndex = colorTop;
+
+			i++;
+		}
+
+		for (int j = 0; j < nSegment; j++)
+		{
+			face[i].nVerts = 4;
+			face[i].vert = new VertexID[face[i].nVerts];
+			face[i].vert[0].vertIndex = 12 + 2 * nSegment + j;
+			face[i].vert[1].vertIndex = 12 + 2 * nSegment + j + 1;
+			face[i].vert[2].vertIndex = 13 + 3 * nSegment + 1 + j;
+			face[i].vert[3].vertIndex = 13 + 3 * nSegment + j;
+
+			for (int k = 0; k < face[i].nVerts; k++)
+				face[i].vert[k].colorIndex = colorSide;
+
+			i++;
+		}
+
+		for (int j = 0; j < nSegment; j++)
+		{
+			face[i].nVerts = 3;
+			face[i].vert = new VertexID[face[i].nVerts];
+			face[i].vert[0].vertIndex = 4;
+			face[i].vert[1].vertIndex = 13 + 3 * nSegment + j;
+			face[i].vert[2].vertIndex = 13 + 3 * nSegment + j + 1;
+
+			for (int k = 0; k < face[i].nVerts; k++)
+				face[i].vert[k].colorIndex = colorBottom;
+
+			i++;
+		}
+
+		face[i].nVerts = 4;
+		face[i].vert = new VertexID[face[i].nVerts];
+		face[i].vert[0].vertIndex = 0;
+		face[i].vert[1].vertIndex = 16 + 4 * nSegment;
+		face[i].vert[2].vertIndex = 19 + 4 * nSegment;
+		face[i].vert[3].vertIndex = 4;
+
+		for (int k = 0; k < face[i].nVerts; k++)
+			face[i].vert[k].colorIndex = colorSide;
+
+		i++;
+
+		face[i].nVerts = 4;
+		face[i].vert = new VertexID[face[i].nVerts];
+		face[i].vert[0].vertIndex = 0;
+		face[i].vert[1].vertIndex = 14 + 4 * nSegment;
+		face[i].vert[2].vertIndex = 15 + 4 * nSegment;
+		face[i].vert[3].vertIndex = 16 + 4 * nSegment;
+
+		for (int k = 0; k < face[i].nVerts; k++)
+			face[i].vert[k].colorIndex = colorTop;
+
+		i++;
+
+		face[i].nVerts = 4;
+		face[i].vert = new VertexID[face[i].nVerts];
+		face[i].vert[0].vertIndex = 14 + 4 * nSegment;
+		face[i].vert[1].vertIndex = 15 + 4 * nSegment;
+		face[i].vert[2].vertIndex = 18 + 4 * nSegment;
+		face[i].vert[3].vertIndex = 17 + 4 * nSegment;
+
+		for (int k = 0; k < face[i].nVerts; k++)
+			face[i].vert[k].colorIndex = colorSide;
+
+		i++;
+
+		face[i].nVerts = 4;
+		face[i].vert = new VertexID[face[i].nVerts];
+		face[i].vert[0].vertIndex = 4;
+		face[i].vert[1].vertIndex = 17 + 4 * nSegment;
+		face[i].vert[2].vertIndex = 18 + 4 * nSegment;
+		face[i].vert[3].vertIndex = 19 + 4 * nSegment;
+
+		for (int k = 0; k < face[i].nVerts; k++)
+			face[i].vert[k].colorIndex = colorBottom;
+
+		i++;
+
+		face[i].nVerts = 4;
+		face[i].vert = new VertexID[face[i].nVerts];
+		face[i].vert[0].vertIndex = 15 + 4 * nSegment;
+		face[i].vert[1].vertIndex = 16 + 4 * nSegment;
+		face[i].vert[2].vertIndex = 19 + 4 * nSegment;
+		face[i].vert[3].vertIndex = 18 + 4 * nSegment;
+
+		for (int k = 0; k < face[i].nVerts; k++)
+			face[i].vert[k].colorIndex = colorSide;
+
+		i++;
+	}
+
 	void CreateGachNen(float fWidth)
 	{
 		int i;
@@ -824,10 +1103,14 @@ float baseScaleDelta = 0.025;
 float baseWidth = baseMeasure;
 float baseHeight = baseWidth * 0.6;
 
-float baseRotateY = 90;
+float baseRotateY = 0;
 float baseRotateX = 0;
 float baseRotateZ = 0;
 float baseRotateDelta = 5;
+
+Mesh bloodyObj;
+float bloodyObjRadius = baseMeasure;
+int bloodyObjNSegments = 32;
 
 Mesh rectangular0;
 float rectangular0Width = baseWidth;
@@ -858,6 +1141,7 @@ float basePositionDelta = 0.1;
 
 void createObject()
 {
+	bloodyObj.CreateBloodyObj(bloodyObjRadius, bloodyObjNSegments);
 	rectangular0.CreateRectangular(rectangular0Length, rectangular0Height, rectangular0Width);
 
 	rectangular1.CreateRectangular(rectangular1Length, rectangular1Height, rectangular1Width);
@@ -936,6 +1220,24 @@ void drawPart(Mesh &part)
 	default:
 		part.Draw();
 	}
+}
+
+void drawBloodyObj()
+{
+	glPushMatrix();
+	glTranslated(0, basePositionY, 0);
+
+	// printf("Rotation rec0: %f, %f, %f\n", baseRotateY, baseRotateX, baseRotateZ);
+	glRotatef(baseRotateY, 0, 1, 0);
+	glRotatef(baseRotateX, 1, 0, 0);
+	glRotatef(baseRotateZ, 0, 0, 1);
+
+	bloodyObj.setupMaterial(COLOR_RED);
+	// bloodyObj.SetColor(COLOR_RED);
+	bloodyObj.CalculateFacesNorm();
+	drawPart(bloodyObj);
+
+	glPopMatrix();
 }
 
 void drawRectangular0()
@@ -1041,6 +1343,7 @@ void drawCylinderAQuater()
 
 void drawAllObject()
 {
+	drawBloodyObj();
 	// drawRectangular0();
 	// drawCylinderHalf();
 	// drawCylinderAQuater();
@@ -1099,7 +1402,7 @@ void displayMe(void)
 		gluLookAt(camera_x, camera_y, camera_z, lookAtX, lookAtY, lookAtZ, 0, 1, 0);
 	}
 	glViewport(0, 0, screenWidth, screenHeight);
-	// drawAxis();
+	drawAxis();
 
 	// Clear the stencil buffers
 	glClearStencil(0);
