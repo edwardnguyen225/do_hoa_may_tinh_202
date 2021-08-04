@@ -1237,9 +1237,12 @@ void drawBloodyObj()
 	glTranslated(0, basePositionY, 0);
 
 	// printf("Rotation rec0: %f, %f, %f\n", baseRotateY, baseRotateX, baseRotateZ);
-	glRotatef(baseRotateY, 0, 1, 0);
-	glRotatef(baseRotateX, 1, 0, 0);
-	glRotatef(baseRotateZ, 0, 0, 1);
+	bloodyObj.rotateX = baseRotateX;
+	bloodyObj.rotateY = baseRotateY;
+	bloodyObj.rotateZ = baseRotateZ;
+	glRotatef(bloodyObj.rotateX, 1, 0, 0);
+	glRotatef(bloodyObj.rotateY, 0, 1, 0);
+	glRotatef(bloodyObj.rotateZ, 0, 0, 1);
 
 	bloodyObj.setupMaterial(COLOR_RED);
 	// bloodyObj.SetColor(COLOR_RED);
