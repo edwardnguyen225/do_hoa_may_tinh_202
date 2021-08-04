@@ -1598,7 +1598,7 @@ void myKeyBoard(unsigned char key, int x, int y)
 		drawMode = DRAW_WIREFRAME;
 		break;
 	}
-	case '2': // TODO: Draw 2d color
+	case '2': // Draw 2d color
 	{
 		drawMode = DRAW_COLOR_2D;
 		break;
@@ -1626,7 +1626,7 @@ void printUsage()
 	cout << "2	: Che do hien thi to mau 2D" << endl;
 	cout << "3	: Che do hien thi to mau 3D" << endl;
 	cout << "U, u	: Di chuyen len tren" << endl;
-	cout << "D, d	: di CHuyen xuong duoi" << endl;
+	cout << "D, d	: Di chuyen xuong duoi" << endl;
 	cout << "I, i	: Phong to" << endl;
 	cout << "O, o	: Thu nho" << endl;
 	cout << "X, x	: Xoay quanh truc X" << endl;
