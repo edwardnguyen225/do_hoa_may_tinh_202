@@ -1128,29 +1128,29 @@ Mesh bloodyObj;
 float bloodyObjRadius = baseMeasure;
 int bloodyObjNSegments = 32;
 
-Mesh rectangular0;
-float rectangular0Width = baseWidth;
-float rectangular0Length = rectangular0Width * 2;
-float rectangular0Height = baseHeight;
-
-Mesh rectangular1;
-float rectangular1Width = baseWidth;
-float rectangular1Length = rectangular1Width * 1.3;
-float rectangular1Height = baseHeight;
-
-Mesh cylinderHalf;
-float cylinderHalfSegments = 32;
-float cylinderHalfHeight = baseHeight;
-float cylinderHalfRadius = baseWidth;
-
-Mesh cylinderAQuater;
-float cylinderAQuaterSegments = 32;
-float cylinderAQuaterHeight = baseHeight;
-float cylinderAQuaterRadius = baseWidth * 2;
+// Mesh rectangular0;
+// float rectangular0Width = baseWidth;
+// float rectangular0Length = rectangular0Width * 2;
+// float rectangular0Height = baseHeight;
+// 
+// Mesh rectangular1;
+// float rectangular1Width = baseWidth;
+// float rectangular1Length = rectangular1Width * 1.3;
+// float rectangular1Height = baseHeight;
+// 
+// Mesh cylinderHalf;
+// float cylinderHalfSegments = 32;
+// float cylinderHalfHeight = baseHeight;
+// float cylinderHalfRadius = baseWidth;
+// 
+// Mesh cylinderAQuater;
+// float cylinderAQuaterSegments = 32;
+// float cylinderAQuaterHeight = baseHeight;
+// float cylinderAQuaterRadius = baseWidth * 2;
 
 float basePositionY = 2;
-float basePositionX = -rectangular0Length;
-float basePositionZ = -rectangular0Width;
+float basePositionX = 0;
+float basePositionZ = 0;
 float basePositionYMax = 5;
 float basePositionYMin = 1;
 float basePositionDelta = 0.1;
@@ -1158,13 +1158,13 @@ float basePositionDelta = 0.1;
 void createObject()
 {
 	bloodyObj.CreateBloodyObj(bloodyObjRadius, bloodyObjNSegments);
-	rectangular0.CreateRectangular(rectangular0Length, rectangular0Height, rectangular0Width);
-
-	rectangular1.CreateRectangular(rectangular1Length, rectangular1Height, rectangular1Width);
-
-	cylinderHalf.CreateCylinderHalf(cylinderHalfSegments, cylinderHalfHeight, cylinderHalfRadius);
-
-	cylinderAQuater.CreateCylinderAQuater(cylinderAQuaterSegments, cylinderAQuaterHeight, cylinderAQuaterRadius);
+// 	rectangular0.CreateRectangular(rectangular0Length, rectangular0Height, rectangular0Width);
+// 
+// 	rectangular1.CreateRectangular(rectangular1Length, rectangular1Height, rectangular1Width);
+// 
+// 	cylinderHalf.CreateCylinderHalf(cylinderHalfSegments, cylinderHalfHeight, cylinderHalfRadius);
+// 
+// 	cylinderAQuater.CreateCylinderAQuater(cylinderAQuaterSegments, cylinderAQuaterHeight, cylinderAQuaterRadius);
 }
 
 void drawAxis()
@@ -1255,107 +1255,107 @@ void drawBloodyObj()
 
 	glPopMatrix();
 }
-
-void drawRectangular0()
-{
-	glPushMatrix();
-	glTranslated(0, basePositionY, 0);
-
-	// printf("Rotation rec0: %f, %f, %f\n", baseRotateY, baseRotateX, baseRotateZ);
-	glRotatef(baseRotateY, 0, 1, 0);
-	glRotatef(baseRotateX, 0, 0, 1);
-	glRotatef(baseRotateZ, 1, 0, 0);
-
-	glTranslated(basePositionX, 0, basePositionZ); // move the center to the end edge of box
-
-	glTranslated(rectangular0.positionX, 0, rectangular0.positionZ);
-
-	rectangular0.setupMaterial(COLOR_RED);
-	// rectangular0.SetColor(COLOR_RED);
-	rectangular0.CalculateFacesNorm();
-	drawPart(rectangular0);
-
-	glPopMatrix();
-}
-
-void drawRectangular1()
-{
-	/*
-	Its always rotate around its center
-	=> rotate it before changing the coordinate
-	 */
-	glPushMatrix();
-	glTranslated(0, basePositionY, 0);
-
-	glRotated(baseRotateY + 90, 0, 1, 0);
-	glRotatef(-baseRotateX, 1, 0, 0);
-	glRotatef(baseRotateZ, 0, 0, 1);
-
-	rectangular1.positionX = -rectangular1Length;
-	rectangular1.positionZ = rectangular1Width;
-	glTranslated(rectangular1.positionX, 0, rectangular1.positionZ);
-
-	rectangular1.setupMaterial(COLOR_RED);
-	// rectangular1.SetColor(COLOR_RED);
-	rectangular1.CalculateFacesNorm();
-	drawPart(rectangular1);
-
-	glPopMatrix();
-}
-
-void drawCylinderHalf()
-{
-	/*
-	Its always rotate around its center
-	=> rotate it before changing the coordinate
-	 */
-	glPushMatrix();
-	glTranslated(0, basePositionY, 0);
-
-	glRotatef(baseRotateY - 90, 0, 1, 0);
-	glRotatef(baseRotateX, 1, 0, 0);
-	glRotatef(-baseRotateZ, 0, 0, 1);
-
-	glTranslated(basePositionX, 0, basePositionZ);
-
-	cylinderHalf.positionX = cylinderHalfRadius;
-	cylinderHalf.positionZ = cylinderHalfRadius + rectangular0Length * 2;
-	glTranslated(cylinderHalf.positionX, 0, cylinderHalf.positionZ);
-
-	cylinderHalf.setupMaterial(COLOR_RED);
-	// cylinderHalf.SetColor(COLOR_RED);
-	cylinderHalf.CalculateFacesNorm();
-	drawPart(cylinderHalf);
-
-	glPopMatrix();
-}
-
-void drawCylinderAQuater()
-{
-	/*
-	Its always rotate around its center
-	=> rotate it before changing the coordinate
-	 */
-	glPushMatrix();
-	glTranslated(0, basePositionY, 0);
-
-	glRotated(baseRotateY + 90, 0, 1, 0);
-	glRotatef(-baseRotateX, 1, 0, 0);
-	glRotatef(baseRotateZ, 0, 0, 1);
-
-	glTranslated(basePositionX, 0, basePositionZ);
-
-	cylinderAQuater.positionX = cylinderAQuaterRadius;
-	cylinderAQuater.positionZ = cylinderAQuaterRadius / 2;
-	glTranslated(cylinderAQuater.positionX, 0, cylinderAQuater.positionZ);
-
-	cylinderAQuater.setupMaterial(COLOR_RED);
-	// cylinderAQuater.SetColor(COLOR_RED);
-	cylinderAQuater.CalculateFacesNorm();
-	drawPart(cylinderAQuater);
-
-	glPopMatrix();
-}
+//
+// void drawRectangular0()
+// {
+// 	glPushMatrix();
+// 	glTranslated(0, basePositionY, 0);
+//
+// 	// printf("Rotation rec0: %f, %f, %f\n", baseRotateY, baseRotateX, baseRotateZ);
+// 	glRotatef(baseRotateY, 0, 1, 0);
+// 	glRotatef(baseRotateX, 0, 0, 1);
+// 	glRotatef(baseRotateZ, 1, 0, 0);
+//
+// 	glTranslated(basePositionX, 0, basePositionZ); // move the center to the end edge of box
+//
+// 	glTranslated(rectangular0.positionX, 0, rectangular0.positionZ);
+//
+// 	rectangular0.setupMaterial(COLOR_RED);
+// 	// rectangular0.SetColor(COLOR_RED);
+// 	rectangular0.CalculateFacesNorm();
+// 	drawPart(rectangular0);
+//
+// 	glPopMatrix();
+// }
+//
+// void drawRectangular1()
+// {
+// 	/*
+// 	Its always rotate around its center
+// 	=> rotate it before changing the coordinate
+// 	 */
+// 	glPushMatrix();
+// 	glTranslated(0, basePositionY, 0);
+//
+// 	glRotated(baseRotateY + 90, 0, 1, 0);
+// 	glRotatef(-baseRotateX, 1, 0, 0);
+// 	glRotatef(baseRotateZ, 0, 0, 1);
+//
+// 	rectangular1.positionX = -rectangular1Length;
+// 	rectangular1.positionZ = rectangular1Width;
+// 	glTranslated(rectangular1.positionX, 0, rectangular1.positionZ);
+//
+// 	rectangular1.setupMaterial(COLOR_RED);
+// 	// rectangular1.SetColor(COLOR_RED);
+// 	rectangular1.CalculateFacesNorm();
+// 	drawPart(rectangular1);
+//
+// 	glPopMatrix();
+// }
+//
+// void drawCylinderHalf()
+// {
+// 	/*
+// 	Its always rotate around its center
+// 	=> rotate it before changing the coordinate
+// 	 */
+// 	glPushMatrix();
+// 	glTranslated(0, basePositionY, 0);
+//
+// 	glRotatef(baseRotateY - 90, 0, 1, 0);
+// 	glRotatef(baseRotateX, 1, 0, 0);
+// 	glRotatef(-baseRotateZ, 0, 0, 1);
+//
+// 	glTranslated(basePositionX, 0, basePositionZ);
+//
+// 	cylinderHalf.positionX = cylinderHalfRadius;
+// 	cylinderHalf.positionZ = cylinderHalfRadius + rectangular0Length * 2;
+// 	glTranslated(cylinderHalf.positionX, 0, cylinderHalf.positionZ);
+//
+// 	cylinderHalf.setupMaterial(COLOR_RED);
+// 	// cylinderHalf.SetColor(COLOR_RED);
+// 	cylinderHalf.CalculateFacesNorm();
+// 	drawPart(cylinderHalf);
+//
+// 	glPopMatrix();
+// }
+//
+// void drawCylinderAQuater()
+// {
+// 	/*
+// 	Its always rotate around its center
+// 	=> rotate it before changing the coordinate
+// 	 */
+// 	glPushMatrix();
+// 	glTranslated(0, basePositionY, 0);
+//
+// 	glRotated(baseRotateY + 90, 0, 1, 0);
+// 	glRotatef(-baseRotateX, 1, 0, 0);
+// 	glRotatef(baseRotateZ, 0, 0, 1);
+//
+// 	glTranslated(basePositionX, 0, basePositionZ);
+//
+// 	cylinderAQuater.positionX = cylinderAQuaterRadius;
+// 	cylinderAQuater.positionZ = cylinderAQuaterRadius / 2;
+// 	glTranslated(cylinderAQuater.positionX, 0, cylinderAQuater.positionZ);
+//
+// 	cylinderAQuater.setupMaterial(COLOR_RED);
+// 	// cylinderAQuater.SetColor(COLOR_RED);
+// 	cylinderAQuater.CalculateFacesNorm();
+// 	drawPart(cylinderAQuater);
+//
+// 	glPopMatrix();
+// }
 
 void drawAllObject()
 {
