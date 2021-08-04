@@ -505,6 +505,9 @@ public:
 		int i;
 		face = new Face[numFaces];
 
+		int sideColor = 0;
+		int botTopColor = 1;
+
 		//Left face
 		face[0].nVerts = 4;
 		face[0].vert = new VertexID[face[0].nVerts];
@@ -514,7 +517,7 @@ public:
 		face[0].vert[3].vertIndex = 2;
 
 		for (i = 0; i < face[0].nVerts; i++)
-			face[0].vert[i].colorIndex = 0;
+			face[0].vert[i].colorIndex = sideColor;
 
 		//Right face
 		face[1].nVerts = 4;
@@ -524,7 +527,7 @@ public:
 		face[1].vert[2].vertIndex = 7;
 		face[1].vert[3].vertIndex = 4;
 		for (i = 0; i < face[1].nVerts; i++)
-			face[1].vert[i].colorIndex = 1;
+			face[1].vert[i].colorIndex = sideColor;
 
 		//top face
 		face[2].nVerts = 4;
@@ -534,7 +537,7 @@ public:
 		face[2].vert[2].vertIndex = 2;
 		face[2].vert[3].vertIndex = 3;
 		for (i = 0; i < face[2].nVerts; i++)
-			face[2].vert[i].colorIndex = 2;
+			face[2].vert[i].colorIndex = botTopColor;
 
 		//bottom face
 		face[3].nVerts = 4;
@@ -544,7 +547,7 @@ public:
 		face[3].vert[2].vertIndex = 5;
 		face[3].vert[3].vertIndex = 4;
 		for (i = 0; i < face[3].nVerts; i++)
-			face[3].vert[i].colorIndex = 3;
+			face[3].vert[i].colorIndex = botTopColor;
 
 		//near face
 		face[4].nVerts = 4;
@@ -554,7 +557,7 @@ public:
 		face[4].vert[2].vertIndex = 1;
 		face[4].vert[3].vertIndex = 0;
 		for (i = 0; i < face[4].nVerts; i++)
-			face[4].vert[i].colorIndex = 4;
+			face[4].vert[i].colorIndex = sideColor;
 
 		//Far face
 		face[5].nVerts = 4;
@@ -564,7 +567,7 @@ public:
 		face[5].vert[2].vertIndex = 6;
 		face[5].vert[3].vertIndex = 7;
 		for (i = 0; i < face[5].nVerts; i++)
-			face[5].vert[i].colorIndex = 5;
+			face[5].vert[i].colorIndex = sideColor;
 	}
 
 	void CreateCylinder(int nSegment, float fHeight, float fRadius)
@@ -667,6 +670,9 @@ public:
 			face[idx].vert[0].vertIndex = 0;
 			face[idx].vert[1].vertIndex = i + 1;
 			face[idx].vert[2].vertIndex = i + 2;
+
+			for (int k = 0; k < face[i].nVerts; k++)
+				face[i].vert[k].colorIndex = 0;
 			idx++;
 		}
 
@@ -679,6 +685,9 @@ public:
 			face[idx].vert[1].vertIndex = i + 2;
 			face[idx].vert[2].vertIndex = i + 3 + nSegment;
 			face[idx].vert[3].vertIndex = i + 2 + nSegment;
+
+			for (int k = 0; k < face[i].nVerts; k++)
+				face[i].vert[k].colorIndex = 1;
 			idx++;
 		}
 
@@ -689,6 +698,9 @@ public:
 			face[idx].vert[0].vertIndex = numVerts - 1;
 			face[idx].vert[1].vertIndex = i;
 			face[idx].vert[2].vertIndex = i + 1;
+
+			for (int k = 0; k < face[i].nVerts; k++)
+				face[i].vert[k].colorIndex = 2;
 			idx++;
 		}
 
@@ -699,6 +711,8 @@ public:
 		face[idx].vert[1].vertIndex = nSegment + 1;
 		face[idx].vert[2].vertIndex = numVerts - 2;
 		face[idx].vert[3].vertIndex = nSegment + 2;
+		for (int k = 0; k < face[4].nVerts; k++)
+			face[4].vert[k].colorIndex = 3;
 	}
 
 	void CreateCylinderAQuater(int nSegment, float fHeight, float fRadius)
@@ -914,9 +928,9 @@ void drawPart(Mesh &part)
 		part.DrawWireframe();
 		break;
 	case DRAW_COLOR_2D:
-	  glDisable(GL_LIGHTING);
-    part.DrawColor();
-    glEnable(GL_LIGHTING);
+		glDisable(GL_LIGHTING);
+		part.DrawColor();
+		glEnable(GL_LIGHTING);
 		break;
 	case DRAW_COLOR_3D:
 	default:
@@ -939,7 +953,7 @@ void drawRectangular0()
 	glTranslated(rectangular0.positionX, 0, rectangular0.positionZ);
 
 	rectangular0.setupMaterial(COLOR_RED);
-	rectangular0.SetColor(COLOR_RED);
+	// rectangular0.SetColor(COLOR_RED);
 	rectangular0.CalculateFacesNorm();
 	drawPart(rectangular0);
 
@@ -964,7 +978,7 @@ void drawRectangular1()
 	glTranslated(rectangular1.positionX, 0, rectangular1.positionZ);
 
 	rectangular1.setupMaterial(COLOR_RED);
-	rectangular1.SetColor(COLOR_RED);
+	// rectangular1.SetColor(COLOR_RED);
 	rectangular1.CalculateFacesNorm();
 	drawPart(rectangular1);
 
@@ -991,7 +1005,7 @@ void drawCylinderHalf()
 	glTranslated(cylinderHalf.positionX, 0, cylinderHalf.positionZ);
 
 	cylinderHalf.setupMaterial(COLOR_RED);
-	cylinderHalf.SetColor(COLOR_RED);
+	// cylinderHalf.SetColor(COLOR_RED);
 	cylinderHalf.CalculateFacesNorm();
 	drawPart(cylinderHalf);
 
@@ -1018,7 +1032,7 @@ void drawCylinderAQuater()
 	glTranslated(cylinderAQuater.positionX, 0, cylinderAQuater.positionZ);
 
 	cylinderAQuater.setupMaterial(COLOR_RED);
-	cylinderAQuater.SetColor(COLOR_RED);
+	// cylinderAQuater.SetColor(COLOR_RED);
 	cylinderAQuater.CalculateFacesNorm();
 	drawPart(cylinderAQuater);
 
@@ -1027,10 +1041,10 @@ void drawCylinderAQuater()
 
 void drawAllObject()
 {
-	drawRectangular0();
-	drawCylinderHalf();
-	drawCylinderAQuater();
-	drawRectangular1();
+	// drawRectangular0();
+	// drawCylinderHalf();
+	// drawCylinderAQuater();
+	// drawRectangular1();
 }
 
 void switchCameraView()
@@ -1234,7 +1248,8 @@ void myKeyBoard(unsigned char key, int x, int y)
 	case 'x':
 	{
 		baseRotateX += baseRotateDelta;
-		if (baseRotateX == 360) {
+		if (baseRotateX == 360)
+		{
 			baseRotateX = 0;
 		}
 		break;
@@ -1243,7 +1258,8 @@ void myKeyBoard(unsigned char key, int x, int y)
 	case 'y':
 	{
 		baseRotateY += baseRotateDelta;
-		if (baseRotateY == 360) {
+		if (baseRotateY == 360)
+		{
 			baseRotateY = 0;
 		}
 		break;
@@ -1252,7 +1268,8 @@ void myKeyBoard(unsigned char key, int x, int y)
 	case 'z':
 	{
 		baseRotateZ += baseRotateDelta;
-		if (baseRotateZ == 360) {
+		if (baseRotateZ == 360)
+		{
 			baseRotateZ = 0;
 		}
 		break;
