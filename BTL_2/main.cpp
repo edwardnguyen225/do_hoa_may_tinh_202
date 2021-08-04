@@ -1124,6 +1124,13 @@ float baseRotateX = 0;
 float baseRotateZ = 0;
 float baseRotateDelta = 5;
 
+float basePositionY = 2;
+float basePositionX = 0;
+float basePositionZ = 0;
+float basePositionYMax = 5;
+float basePositionYMin = 1;
+float basePositionDelta = 0.1;
+
 Mesh bloodyObj;
 float bloodyObjRadius = baseMeasure;
 int bloodyObjNSegments = 32;
@@ -1132,39 +1139,32 @@ int bloodyObjNSegments = 32;
 // float rectangular0Width = baseWidth;
 // float rectangular0Length = rectangular0Width * 2;
 // float rectangular0Height = baseHeight;
-// 
+//
 // Mesh rectangular1;
 // float rectangular1Width = baseWidth;
 // float rectangular1Length = rectangular1Width * 1.3;
 // float rectangular1Height = baseHeight;
-// 
+//
 // Mesh cylinderHalf;
 // float cylinderHalfSegments = 32;
 // float cylinderHalfHeight = baseHeight;
 // float cylinderHalfRadius = baseWidth;
-// 
+//
 // Mesh cylinderAQuater;
 // float cylinderAQuaterSegments = 32;
 // float cylinderAQuaterHeight = baseHeight;
 // float cylinderAQuaterRadius = baseWidth * 2;
 
-float basePositionY = 2;
-float basePositionX = 0;
-float basePositionZ = 0;
-float basePositionYMax = 5;
-float basePositionYMin = 1;
-float basePositionDelta = 0.1;
-
 void createObject()
 {
 	bloodyObj.CreateBloodyObj(bloodyObjRadius, bloodyObjNSegments);
-// 	rectangular0.CreateRectangular(rectangular0Length, rectangular0Height, rectangular0Width);
-// 
-// 	rectangular1.CreateRectangular(rectangular1Length, rectangular1Height, rectangular1Width);
-// 
-// 	cylinderHalf.CreateCylinderHalf(cylinderHalfSegments, cylinderHalfHeight, cylinderHalfRadius);
-// 
-// 	cylinderAQuater.CreateCylinderAQuater(cylinderAQuaterSegments, cylinderAQuaterHeight, cylinderAQuaterRadius);
+	// 	rectangular0.CreateRectangular(rectangular0Length, rectangular0Height, rectangular0Width);
+	//
+	// 	rectangular1.CreateRectangular(rectangular1Length, rectangular1Height, rectangular1Width);
+	//
+	// 	cylinderHalf.CreateCylinderHalf(cylinderHalfSegments, cylinderHalfHeight, cylinderHalfRadius);
+	//
+	// 	cylinderAQuater.CreateCylinderAQuater(cylinderAQuaterSegments, cylinderAQuaterHeight, cylinderAQuaterRadius);
 }
 
 void drawAxis()
