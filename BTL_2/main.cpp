@@ -942,7 +942,6 @@ public:
 			face[i].vert[0].vertIndex = 8;
 			face[i].vert[1].vertIndex = 8 + j + 1;
 			face[i].vert[2].vertIndex = 8 + j + 2;
-
 			for (int k = 0; k < face[i].nVerts; k++)
 				face[i].vert[k].colorIndex = colorTop;
 			i++;
@@ -957,7 +956,6 @@ public:
 			face[i].vert[1].vertIndex = 8 + j + 2;
 			face[i].vert[2].vertIndex = 8 + j + 2 + nSegment + 1;
 			face[i].vert[3].vertIndex = 8 + j + 1 + nSegment + 1;
-
 			for (int k = 0; k < face[i].nVerts; k++)
 				face[i].vert[k].colorIndex = colorSide;
 			i++;
@@ -971,7 +969,6 @@ public:
 			face[i].vert[0].vertIndex = 2 * nSegment + 11;
 			face[i].vert[1].vertIndex = 10 + nSegment + j;
 			face[i].vert[2].vertIndex = 10 + nSegment + 1 + j;
-
 			for (int k = 0; k < face[i].nVerts; k++)
 				face[i].vert[k].colorIndex = colorBottom;
 			i++;
@@ -985,7 +982,6 @@ public:
 			face[i].vert[0].vertIndex = 0;
 			face[i].vert[1].vertIndex = 12 + 2 * nSegment + j;
 			face[i].vert[2].vertIndex = 12 + 2 * nSegment + j + 1;
-
 			for (int k = 0; k < face[i].nVerts; k++)
 				face[i].vert[k].colorIndex = colorTop;
 			i++;
@@ -1000,7 +996,6 @@ public:
 			face[i].vert[1].vertIndex = 12 + 2 * nSegment + j + 1;
 			face[i].vert[2].vertIndex = 13 + 3 * nSegment + 1 + j;
 			face[i].vert[3].vertIndex = 13 + 3 * nSegment + j;
-
 			for (int k = 0; k < face[i].nVerts; k++)
 				face[i].vert[k].colorIndex = colorSide;
 			i++;
@@ -1014,7 +1009,6 @@ public:
 			face[i].vert[0].vertIndex = 4;
 			face[i].vert[1].vertIndex = 13 + 3 * nSegment + j;
 			face[i].vert[2].vertIndex = 13 + 3 * nSegment + j + 1;
-
 			for (int k = 0; k < face[i].nVerts; k++)
 				face[i].vert[k].colorIndex = colorBottom;
 			i++;
@@ -1066,7 +1060,7 @@ public:
 			face[i].vert[k].colorIndex = colorSide;
 		i++;
 
-		/* ========== Rectangular Small - bottom faces ========== */
+		/* ========== Rectangular Small - bottom face ========== */
 		starterId = 17 + 4 * nSegment;
 		face[i].nVerts = 4;
 		face[i].vert = new VertexID[face[i].nVerts];
