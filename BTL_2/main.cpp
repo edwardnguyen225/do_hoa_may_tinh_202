@@ -1404,7 +1404,7 @@ void displayMe(void)
 		gluLookAt(camera_x, camera_y, camera_z, lookAtX, lookAtY, lookAtZ, 0, 1, 0);
 	}
 	glViewport(0, 0, screenWidth, screenHeight);
-	drawAxis();
+	// drawAxis();
 
 	// Clear the stencil buffers
 	glClearStencil(0);
